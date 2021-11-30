@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navigation class="navigation"/>
-    <router-view />
+    <router-view class="router-view"/>
     <Footer />
   </div>
 </template>
@@ -35,7 +35,6 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Quicksand", sans-serif;
 }
 
 .app {
@@ -46,13 +45,59 @@ export default {
 .navigation {
   z-index: 99;
 }
-.container {
+.router-view{
+  width: 1200px;
+  margin: 0 auto;
 }
-
-.link {
-}
-
-.link-light {
-  color: #fff;
-}
+.intros {
+    display: flex;
+    flex-direction: column;
+    width: 1200px;
+    margin: 0 auto;
+    
+    .title {
+      font-size: 24px;
+      padding: 50px 0;
+      //border-bottom: 1px solid black;
+      h1{
+        text-align: center;
+      }
+    }
+    .website {
+      display: flex;
+      flex-direction: row;
+      padding: 30px 0;
+      border-top: 1px solid black;
+      h1{
+        flex: 1;
+        font-size: 3rem;
+        font-weight: 300;
+      }
+      h4{
+        flex: 1;
+        font-weight: 100;
+      }
+    }
+    .intro {
+      display: flex;
+      flex-direction: row;
+      padding: 30px 0;
+      border-top: 1px solid black;
+      .intro-en {
+        flex: 1;
+        h2{
+          
+        }
+      }
+      .intro-ko {
+        flex: 1;
+        h2{
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  .link-light {
+    color: #fff;
+  }
 </style>
