@@ -42,6 +42,12 @@
         </div>
       </div>
 
+      <div class="board">
+        <h4 class="detail">상세정보</h4>
+        <h4>/</h4>
+        <h4 class="qna">Q & A</h4>
+      </div>
+
       <Description />
 
       <div class="service-desc">
@@ -142,7 +148,7 @@ export default {
           .deli-pay {
            
            font-size: 12px;
-           font-weight: 600;
+           font-weight: 700;
            padding-right: 10px; 
           }
           .deli-pay-desc{
@@ -154,7 +160,7 @@ export default {
       }
 
       .product-quantity{
-        
+        margin-top: 20px;
         background-color: #eee;
         .quantity {
           width: 95%;
@@ -229,15 +235,29 @@ export default {
       }
       .btns {
         width: 100%;
-        border: 1px solid black;
-        display: flex;
+        height: 50px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        
         .buy-btn {
-          flex: 1;
-          
+          font-size: 14px;
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #7ba3c5;
+          color: white;
+          font-weight: 500;
+          border: 1px solid #aaa;
         }
         .btn {
-          flex: 1;
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #fff;  
+          font-size: 14px;
+          font-weight: 500;
+          border: 1px solid #aaa;
         }
+        @media (min-width: 1200px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
       }
     }
   }
@@ -260,6 +280,28 @@ export default {
       font-weight: 400;
       font-size: 12px;
       line-height: 19px;
+    }
+  }
+
+  .board {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 50px;
+    h4 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 13px;
+      padding: 0 20px;
+    }
+    
+  }
+
+  .btns {
+    .btn {
+      border: 1px solid #aaa;
+      background-color: #fff;
     }
   }
 }

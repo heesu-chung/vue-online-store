@@ -21,7 +21,7 @@
                     <h5 class="log">Logout</h5>
                 </div>
                 <div class="menu">
-                    <div class="shop-list">List</div>
+                    <router-link :to="{name: 'ShopCart'}" class="shop-list">Shop Cart</router-link>
                     <div class="search">Find</div>
                 </div>
             </div>
@@ -138,6 +138,8 @@ header {
                 align-items: center;
                 .shop-list {
                     padding: 0 10px;
+                    color: #000;
+                    text-decoration: none;
                 }
                 .search {
                     padding: 0 10px;
