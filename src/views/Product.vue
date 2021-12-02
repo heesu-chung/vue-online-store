@@ -35,8 +35,8 @@
               <h3 class="total-price">250,000원</h3>
             </div>
             <div class="btns">
-              <button class="buy-btn">구매하기</button>
-              <button class="btn">장바구니</button>
+              <router-link class="buy-btn" :to="{name: 'ShopPayment'}">구매하기</router-link>
+              <router-link class="btn" :to="{name: 'ShopCart'}">장바구니</router-link>
               <button class="btn">하트</button>
             </div>
         </div>
@@ -239,7 +239,7 @@ export default {
         display: grid;
         grid-template-columns: 1fr;
         gap: 10px;
-        
+
         .buy-btn {
           font-size: 14px;
           font-family: 'Noto Sans KR', sans-serif;
@@ -247,6 +247,14 @@ export default {
           color: white;
           font-weight: 500;
           border: 1px solid #aaa;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: .3s ease all;
+          &:hover {
+            background-color: #4a82b3;;
+          }
         }
         .btn {
           font-family: 'Noto Sans KR', sans-serif;
@@ -254,6 +262,14 @@ export default {
           font-size: 14px;
           font-weight: 500;
           border: 1px solid #aaa;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: .3s all ease;
+          &:hover {
+            border: 1px solid black;
+          }
         }
         @media (min-width: 1200px) {
         grid-template-columns: repeat(3, 1fr);
@@ -296,13 +312,6 @@ export default {
       padding: 0 20px;
     }
     
-  }
-
-  .btns {
-    .btn {
-      border: 1px solid #aaa;
-      background-color: #fff;
-    }
   }
 }
 </style>
