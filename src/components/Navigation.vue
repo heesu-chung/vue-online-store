@@ -17,7 +17,7 @@
 
             <div class="right-element">
                 <div class="auth">
-                    <h5 class="user">DDD</h5>
+                    <router-link class="user" :to="{name: 'MyPage'}">DDD</router-link>
                     <h5 class="log">Logout</h5>
                 </div>
                 <div class="menu">
@@ -120,6 +120,14 @@ header {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                .user {
+                    text-decoration: none;
+                    color: #aaa;
+                    transition: .3s ease all;
+                    &:hover {
+                        color: #000;
+                    }
+                }
                 h5 {
                     padding: 0 10px;
                     font-size: 12px;

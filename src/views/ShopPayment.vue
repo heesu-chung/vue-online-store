@@ -1,5 +1,123 @@
 <template>
-  <div></div>
+  <div class="container-wrap">
+    <div class="container">
+    <h2 class="page">결제하기</h2>
+    
+    <div class="contents">
+
+    <div class="product-info-wrap">
+      <div class="product-infos">
+        <h3 class="title">주문 상품 정보</h3>
+        <router-link class="content" :to="{name: 'Product'}">
+          <img src="" alt="">
+          <div class="product-info">
+            <h4 class="product-name">Lumio x SUPERFICTION Lito mini / Blue</h4>
+            <h5 class="product-quantity">1개</h5>
+            <h4 class="product-price">250,000원</h4>
+          </div>
+        </router-link>
+      </div>
+        <div class="orderer-infos">
+          <h3 class="title">주문자 정보</h3>
+          <div class="name-tel">
+            <input type="text" class="name" placeholder="Name">
+            <input type="text" class="contact" placeholder="Contact">
+          </div>
+          <input type="text" class="email" placeholder="Email">
+        </div>
+
+        <div class="order-infos">
+          <h3 class="title">배송 정보</h3>
+          <div class="auto">
+            <input type="checkbox" class="checkbox">
+            <h4 class="identical">주문자 정보와 동일</h4>
+          </div>
+          <div class="detail-infos">
+            <input type="text" class="recipient" placeholder="수령인">
+            <input type="text" class="contact" placeholder="연락처">
+          </div>
+          <div class="address-num">
+            <input type="text" class="zip-code" placeholder="우편번호">
+            <button class="find-zip-code">주소 찾기</button>
+          </div>
+          <input type="text" class="address" placeholder="주소">
+          <input type="text" class="address-detail" placeholder="상세주소">
+          <div class="auto">
+            <input type="checkbox" class="checkbox">
+            <h4 class="identical">배송지 목록에 추가</h4>
+          </div>
+          <div class="memos">
+            <h4 class="memo">배송메모</h4>
+            <select name="" id="" class="message">
+              <option value="">배송 메모를 선택해 주세요.</option>
+              <option value="">배송 전에 미리 연락 바랍니다.</option>
+              <option value="">부재시 경비실에 맡겨주세요.</option>
+              <option value="">부재시 전화나 문자를 남겨주세요.</option>
+              <option value="">직접 입력</option>
+            </select>
+            <input type="text" class="typing" placeholder="배송 메모를 입력해 주세요.">
+          </div>
+        </div>
+    
+    </div>
+
+    <div class="payment-info-wrap">
+        <div class="payment-price">
+          <h3 class="title">최종 결제금액</h3>
+          <div class="contents-price">
+            <div class="content-price">
+              <h4 class="product-price-title">상품 가격</h4>
+              <h4 class="delivery-price-title">배송비</h4>
+            </div>
+            <div class="prices">
+              <h4 class="product-price">250,000원</h4>
+              <h4 class="delivery-price">무료</h4>
+            </div>
+          </div>
+          <div class="total">
+            <h4 class="total-price-title">총 결제금액(1개)</h4>
+            <h4 class="total-price">250,000원</h4>
+          </div>
+        </div>
+
+        <div class="payment-method">
+          <h3 class="title">결제수단</h3>
+          <div class="select">
+            <div class="select-item">
+              <input type="radio" name="method" id="credit-card" value="credit"><label for="credit-card">신용카드</label>
+            </div>
+            <div class="select-item">
+              <input type="radio" name="method" id="real-time"><label for="real-time">실시간 계좌이체</label>
+            </div>
+            <div class="select-item">
+              <input type="radio" name="method" id="virtual"><label for="virtual">가상계좌</label>
+            </div>
+            <div class="select-item">
+              <input type="radio" name="method" id="none"><label for="none">무통장입금</label>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="agreement">
+          <div class="agree-all">
+            <input type="checkbox" name="all" id="">
+            <h4 class="agree-all-text">전체 동의</h4>
+          </div>
+          <div class="agree">
+            <h4>ㄴ</h4>
+            <input type="checkbox" name="" id="">
+            <h4 class="agree-text">구매조건 확인 및 결제진행에 동의</h4>
+          </div>
+        </div>
+        <button class="payment-check">
+            결제하기
+        </button>
+    </div>
+    </div>
+    
+  </div>
+  </div>
 </template>
 
 <script>
@@ -8,6 +126,274 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+*{
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+}
+.title {
+            font-size: 15px;
+            font-weight: 700;
+            padding-bottom: 20px;  
+}
 
+input {
+  height: 35px;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+}
+
+.container-wrap {
+  background-color: #f3f3f3;
+  width: 100%;
+  
+  .container {
+    width: 1200px;
+    margin: 0 auto;
+    .page {
+      width: 100%;
+      padding: 50px 0;
+      text-align: center;
+      font-size: 28px;
+    }
+    .contents {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      padding-bottom: 50px;
+      .product-info-wrap{
+        width: 45%;
+        margin-right: 20px;
+        .product-infos {
+          margin-bottom: 20px;
+          background-color: #fff;
+          padding: 20px 20px;
+          
+          .content {
+            display: flex;
+            flex-direction: row;
+            text-decoration: none;
+            color: #000;
+            img {
+              width: 80px;
+              height: 80px;
+              margin-right: 15px;  
+            }
+            .product-info {
+              
+              .product-name {
+                text-decoration: none;
+                font-size: 14px;
+                padding: 5px 0;
+              }
+              .product-quantity {
+                font-size: 12px;
+                color: #aaa;
+                padding-bottom: 5px;
+              }
+              .product-price {
+                font-size: 14px;
+                font-weight: 700;
+              }
+            }
+          }
+        }
+
+        .orderer-infos {
+          
+          margin-bottom: 20px;
+          background-color: #fff;
+          padding: 20px 20px;
+          .name-tel {
+            display: flex;
+            flex-direction: row;
+            
+            justify-content: space-between;
+            .name {
+              width: 49%;
+            }
+            .contact {
+              width: 49%;  
+            }
+          }
+          .email {
+            width: 100%;
+          }
+        }
+
+
+        .order-infos {
+          margin-bottom: 20px;
+          background-color: #fff;
+          padding: 20px 20px;
+
+          .auto {
+            display: flex;
+            flex-direction: row;
+            
+            .checkbox {
+              width: 15px;
+              
+            }
+            .identical {
+              font-size: 13px;
+              padding-left: 10px;
+              margin-top: 6px;
+            }
+          }
+          .detail-infos {
+            display: flex;
+            justify-content: space-between;
+            .recipient, .contact {
+              width: 49%;
+            }
+          }
+          .address-num {
+            
+            .zip-code {
+              width: 20%;
+              margin-right: 10px;
+            }
+            .find-zip-code {
+              width: 20%;
+              height: 35px;
+              border: 1px solid #ccc;
+              cursor: pointer;
+            }
+          }
+          .address, .address-detail {
+            width: 100%;
+          }
+          .memos {
+            .memo { 
+              font-size: 14px;
+              padding-bottom: 15px;
+            }
+            .message {
+              width: 100%;
+              height: 35px;
+              margin-bottom: 10px;
+            }
+          }
+        }
+      }
+
+
+      .payment-info-wrap {
+        padding-bottom: 50px;
+        .payment-price {
+          margin-bottom: 20px;
+          background-color: #fff;
+          padding: 20px 20px;
+  
+
+          .contents-price {
+            display: flex;
+            flex-direction: row;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+            .content-price, .prices {
+              width: 50%;
+              font-size: 14px;
+              margin-bottom: 20px;
+            }
+            .content-price {
+              color: #999;
+              .product-price-title {
+                margin-bottom: 5px;
+              }
+            }
+            .prices {
+              text-align: right;
+              .product-price {
+                margin-bottom: 5px;
+              }
+            }
+          }
+
+          .total {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            .total-price-title {
+              font-size: 14px;  
+            }
+            .total-price {
+              color: #7ba3c5;
+              font-weight: 700;
+            }
+          }
+        }
+        
+        .payment-method {
+           margin-bottom: 20px;
+          background-color: #fff;
+          padding: 20px 20px;
+          font-size: 14px;
+          
+          .select{
+            display: grid;
+            grid-template-columns: 1fr;
+            @media(min-width: 1200px) {
+              grid-template-columns: repeat(2, 1fr);
+            }
+            .select-item {
+              
+              display: flex;
+              
+              input {
+                width: 15px;
+                margin-right: 10px;
+              }
+              label {
+                padding-top: 6px;
+              }
+            }
+            
+          }
+        }
+
+        .agreement {
+          background-color: #fff;
+          padding: 20px 20px;
+          font-size: 14px;
+          .agree-all, .agree {
+            display: flex;
+            flex-direction: row;
+          }
+          input {
+            margin-right: 10px;
+            width: 15px;
+            color: #111;
+          }
+          h4 {
+            padding-top: 7px;
+          }
+          .agree {
+            margin-left: 25px;
+          }
+        }
+
+        .payment-check {
+          width: 100%;
+          height: 50px;
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          background-color: #7ba3c5;
+          color: #fff;
+          cursor: pointer;
+          border: none;
+          transition: .3s all ease;
+          &:hover {
+            background-color: #4a82b3;
+          }
+        }
+      }
+    }
+
+  }
+}
 </style>

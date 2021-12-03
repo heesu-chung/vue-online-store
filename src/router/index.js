@@ -7,6 +7,7 @@ import Contact from '../views/Contact.vue';
 import Product from '../views/Product.vue';
 import ShopCart from '../views/ShopCart.vue';
 import ShopPayment from '../views/ShopPayment.vue';
+import MyPage from '../views/MyPage.vue';
 Vue.use(VueRouter);
 
 const routes = [
@@ -44,6 +45,11 @@ const routes = [
         path: "/shop-payment",
         name: "ShopPayment",
         component: ShopPayment,
+    },
+    {
+        path: "/shop-mypage",
+        name: "My Page",
+        component: MyPage,
     },
 ];
 
