@@ -8,6 +8,9 @@ import Product from '../views/Product.vue';
 import ShopCart from '../views/ShopCart.vue';
 import ShopPayment from '../views/ShopPayment.vue';
 import MyPage from '../views/MyPage.vue';
+import Login from '../views/Login.vue';
+import Register from '../views/Register.vue';
+import SiteJoinAgreement from '../views/SiteJoinAgreement.vue';
 Vue.use(VueRouter);
 
 const routes = [
@@ -50,6 +53,21 @@ const routes = [
         path: "/shop-mypage",
         name: "My Page",
         component: MyPage,
+    },
+    {
+        path: "/login",
+        name: "Login",
+        component: Login,
+    },
+    {
+        path: "/register",
+        name: "Register",
+        component: Register,
+    },
+    {
+        path: "/site_join_agreement",
+        name: "SiteJoinAgreement",
+        component: SiteJoinAgreement,
     },
 ];
 

@@ -1,11 +1,19 @@
 <template>
-      <div class="container">
-        <img src="" alt="">
-        <img src="" alt="">
-        <img src="" alt="">
-        <img src="" alt="">
-      </div>
-  
+  <div class="container-wrap">
+        <router-link class="landing" :to="{name: 'Shop'}">
+          <img src="" alt="">
+        </router-link>
+        <router-link class="landing" :to="{name: 'Shop'}">
+          <img src="" alt="">
+        </router-link>
+        <router-link class="landing" :to="{name: 'Shop'}">
+          <img src="" alt="">
+        </router-link>
+        <router-link class="landing" :to="{name: 'Shop'}">
+          <img src="" alt="">
+        </router-link>
+      
+  </div>  
 </template>
 
 <script>
@@ -21,8 +29,9 @@ export default {
 *{
 
 }
-.container {
+.container-wrap {
   position: relative;
+  width: 100%;
   img {
     width: 100%;
     height: 100vh;

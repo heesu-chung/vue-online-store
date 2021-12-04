@@ -4,12 +4,13 @@
       <nav class="container">
           <div class="left-element">
             <div class="logo">
-                <router-link class="link" :to="{name: 'Home'}">DDDDDDD</router-link>
+                <router-link class="link" :to="{name: 'Home'}">DeDeDef</router-link>
             </div>
             <div class="nav-links">
                 <ul v-show="!mobile">
                     <router-link class="link" :to="{name: 'Shop'}">SHOP</router-link>
                     <router-link class="link" :to="{name: 'About'}">ABOUT</router-link>
+                    <router-link class="link" :to="{name: 'Contact'}">ART WORK</router-link>
                     <router-link class="link" :to="{name: 'Contact'}">CONTACT</router-link>
                 </ul>
             </div>
@@ -17,8 +18,8 @@
 
             <div class="right-element">
                 <div class="auth">
-                    <router-link class="user" :to="{name: 'MyPage'}">DDD</router-link>
-                    <h5 class="log">Logout</h5>
+                    <router-link class="login" :to="{name: 'Login'}">Login</router-link>
+                    <router-link class="register" :to="{name: 'SiteJoinAgreement'}">Register</router-link>
                 </div>
                 <div class="menu">
                     <router-link :to="{name: 'ShopCart'}" class="shop-list">Shop Cart</router-link>
@@ -74,13 +75,14 @@ header {
         display: flex;
         flex-direction: row;
         .left-element{
-            flex:1;
+            flex:2;
             display: flex;
             flex-direction: row;
             .logo{
                 
                 font-size: 40px;
-                font-weight: 400;
+                font-weight: 900;
+                letter-spacing: -5px;
                 .link {
                     text-decoration: none;
                     color: #000;
@@ -91,7 +93,7 @@ header {
                 }
             }
             .nav-links{
-                padding-left: 30px;
+                //padding-left: 30px;
                 ul {
                     padding: 15px 15px;
                     
@@ -134,10 +136,16 @@ header {
                     font-weight: 400;
                 }
 
-                .log {
-                        border-right: 1px solid #666;
+                .login {
                         padding-right: 20px;
-                        margin-right: 10px;
+                        color: #000;
+                        text-decoration: none;
+                }
+                .register {
+                    border-right: 1px solid #666;
+                    padding-right: 20px;
+                    text-decoration: none;
+                    color: #000;
                 }
             }
             .menu {
