@@ -29,7 +29,7 @@
           </div>
           <div class="icons">
               <a class="icon" href=https://www.instagram.com/dededef_lab/>instagram</a>
-              <router-link class="icon">facebook</router-link>
+              
           </div>
       </div>
   </footer>

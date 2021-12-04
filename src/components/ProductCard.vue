@@ -1,11 +1,11 @@
 <template>
   <div class="product-card">
-      <div class="product">
-          <router-link :to="{name: 'Product'}" class="product-img" alt=""/>
-        <router-link :to="{name: 'Product'}" class="product-name">Product Name</router-link>
-      </div>
-      <h5 class="product-price">Price원</h5>
-      <div class="soldout">
+      <router-link class="product" :to="{name: 'Product', params: {productId: this.post.productId }}">
+        <img  class="product-img" :src="post.productPhoto" alt=""/>
+        <router-link :to="{name: 'Product'}" class="product-name">{{post.productName}}</router-link>
+      </router-link>
+      <h5 class="product-price">{{price}}원</h5>
+      <div class="soldout" v-show="!productNum">
           <h5>SOLDOUT</h5>
       </div>
   </div>
@@ -14,6 +14,22 @@
 <script>
 export default {
     name: 'ProductCard',
+    props: ["post"],
+    data() {
+        return {
+            
+        }
+    },
+    computed: {
+        productNum() {
+            return this.post.productRemainQuantity;
+        },
+        price() {
+            let finalPrice = this.post.productPrice.toLocaleString();
+            //or 정규식 사용
+            return finalPrice; 
+        },
+    }
 }
 </script>
 
@@ -29,6 +45,7 @@ export default {
     .product {
         display: flex;
         flex-direction: column;
+        text-decoration: none;
         .product-img {
             width: 100%;
             height: 280px;

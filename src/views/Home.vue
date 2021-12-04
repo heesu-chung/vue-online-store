@@ -12,7 +12,6 @@
         <router-link class="landing" :to="{name: 'Shop'}">
           <img src="" alt="">
         </router-link>
-      
   </div>  
 </template>
 

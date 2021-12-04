@@ -4,15 +4,7 @@
     <!-- :post v-for :key -->
     <div class="product-cards-wrap">
       <div class="product-cards">
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-    
+        <ProductCard :post="post" v-for="(post, index) in sampleProducts" :key="index"/>
       </div>
     </div>
     <div class="page">
@@ -31,6 +23,11 @@ export default {
     components: {
       ProductCard,
     },
+    computed: {
+      sampleProducts() {
+        return this.$store.state.sampleProducts;
+      },
+    }
 }
 </script>
 

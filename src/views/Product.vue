@@ -5,16 +5,17 @@
         <img src="" alt="">
         <div class="info">
           <div class="product-details">
-                <h2 class="product-name">Lumio x SUPERFICTION Lito mini / Blue</h2>
+                <h2 class="product-name">{{ this.currentProduct[0].productName}}</h2>
                 <div class="product-specific">
-                  <h3 class="price">250,000원</h3>
+                  <h3 class="price">{{ productPrice }}원</h3>
                   <div class="icon">
                     <!-- Share -->
                   </div>
                 </div>
                 <div class="deli-price-desc">
                   <h5 class="deli-pay">배송비</h5>
-                  <h5 class="deli-pay-desc">무료 (50,000원 이상 무료배송)</h5>
+                  <h5 class="deli-pay-desc" v-if="isFree">무료 (50,000원 이상 무료배송)</h5>
+                  <h5 class="deli-pay-desc" v-if="!isFree"> +3,000원</h5>
                 </div>
             </div>
             <div class="product-quantity">
@@ -22,21 +23,24 @@
               <div class="quantity-price">
                 <div class="manipulate">
                   <div class="quantity-manipulate">
-                    <button class="minus">-</button>
-                    <h4 class="quantity-num">1</h4>
-                    <button class="plus">+</button>
+                    <button class="minus" @click="minus">-</button>
+                    <h4 class="quantity-num">{{ quantity }}</h4>
+                    <button class="plus" @click="plus">+</button>
                   </div>
-                  <h5 class="price">250,000원</h5>
+                  <h5 class="price">{{ totalProductPrice }}원</h5>
                 </div>
               </div>
             </div>
             <div class="total">
-              <h4 class="total-price-desc">총 상품금액(1개)</h4>
-              <h3 class="total-price">250,000원</h3>
+              <h4 class="total-price-desc">총 상품금액({{ this.quantity }}개)</h4>
+              <h3 class="total-price">{{ totalProductPrice }}원</h3>
             </div>
             <div class="btns">
-              <router-link class="buy-btn" :to="{name: 'ShopPayment'}">구매하기</router-link>
-              <router-link class="btn" :to="{name: 'ShopCart'}">장바구니</router-link>
+              <router-link class="buy-btn" :to="{name: 'ShopPayment'}" v-if="this.currentProduct[0].productRemainQuantity">구매하기</router-link>
+              <router-link class="btn" :to="{name: 'ShopCart'}" v-if="this.currentProduct[0].productRemainQuantity">장바구니</router-link>
+              <div class="soldout-message" v-if="!this.currentProduct[0].productRemainQuantity">
+                품절된 상품입니다.
+              </div>
               <button class="btn">하트</button>
             </div>
         </div>
@@ -97,6 +101,57 @@ export default {
   components: {
     Description,
     Question,
+  },
+  data() {
+    return {
+      currentProduct: null,
+      quantity: 1,
+      deliPay: 0,
+    }
+  },
+  async mounted() {
+    this.currentProduct = await this.$store.state.sampleProducts.filter((post) => {
+      return post.productId === this.$route.params.productId;
+    });  
+  },
+  computed: {
+    productPrice() {
+      let finalPrice = this.currentProduct[0].productPrice.toLocaleString();
+      return finalPrice;
+    },
+    totalProductPrice() {
+      let finalPrice = (this.currentProduct[0].productPrice * this.quantity) + this.deliPay;
+      finalPrice = finalPrice.toLocaleString();
+      return finalPrice;
+    },
+    isFree() {
+      let finalPrice = this.currentProduct[0].productPrice * this.quantity;      
+      if(finalPrice > 50000) {
+        this.deliPayComputed(finalPrice);
+        return true;
+      }
+      else {
+        this.deliPayComputed(finalPrice);
+        return false;
+      }
+    }
+  },
+  methods: {
+    minus() {
+      if(this.quantity !== 1) this.quantity--;
+    },
+    plus() {
+      if(this.quantity !== 100) this.quantity++;
+    },
+    deliPayComputed(finalPrice) { 
+      //console.log("finalPrice is " + finalPrice);
+      if(finalPrice > 50000) this.deliPay = 0;
+      else this.deliPay = 3000;
+      //console.log("deliPay is " + this.deliPay)
+    },
+  },
+  watch: {
+
   },
 }
 </script>
@@ -270,6 +325,18 @@ export default {
           &:hover {
             border: 1px solid black;
           }
+        }
+
+        .soldout-message {
+          font-size: 14px;
+          font-weight: 500;
+          background-color: #7ba3c5;
+          color: #fff;
+          opacity: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          grid-template-columns: 2fr;
         }
         @media (min-width: 1200px) {
         grid-template-columns: repeat(3, 1fr);

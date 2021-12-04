@@ -1,4 +1,4 @@
-# fireblogs
+# on-store
 
 ## Project setup
 ```
