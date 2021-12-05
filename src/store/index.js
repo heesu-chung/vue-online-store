@@ -32,7 +32,9 @@ export default new Vuex.Store({
     productWishes: null,
     productDeliveryPrice: null,
     productPhoto: null,
-    productPhotoName: null,
+    productPhotoName: '',
+    productPhotoURL: null,
+
     productUpdateDate: null,
     productHTML: null,
 
@@ -50,8 +52,61 @@ export default new Vuex.Store({
     profileMessage: [],
   },
   mutations: {
+    openPhotoPreview(state) {
+      state.blogPhotoPreview = !state.blogPhotoPreview;
+    },
+    fileNameChange(state, payload) {
+      state.blogPhotoName = payload;
+    },
+    createFileURL(state, payload) {
+      state.blogPhotoFileURL = payload;
+    },
+
+    // ProductEditor mutations
+    newProductPost(state, payload) {
+      state.productHTML = payload;
+    },
+    updateRemainQuantity(state, payload) {
+      state.productRemainQuantity = payload;
+    },
+    updateProductPrice(state, payload) {
+      state.productPrice = payload;
+    },
+    updateProductName(state, payload) {
+      state.productName = payload;
+    },
   },
   actions: {
+    async getPost({ state }) {
+      const dataBase = await db.collection('shopPosts').orderBy('date', 'desc');
+      const dbResults = await dataBase.get();
+      dbResults.forEach((doc) => {
+        if (!state.shopPosts.some(post => post.productId === doc.id)) {
+          const data = {
+            productId: doc.data().productId,
+            productName: doc.data().productName,
+            productPrice: doc.data().productPrice,
+            productRemainQuantity: doc.data().productRemainQuantity,
+            productWishes: doc.data().productWishes,
+            productDeliveryPrice: doc.data().productDeliveryPrice,
+            productPhoto: doc.data().productPhoto,
+            productUpdateDate: doc.data().productUpdateDate,
+            productHTML: doc.data().productHTML,
+          };  
+          state.shopPosts.push(data);
+        }
+      });
+      state.postLoaded = true;
+    },
+    async deletePost({commit}, payload) {
+      const getPost = await db.collection('blogPost').doc(payload);
+      await getPost.delete();
+      commit('filterBlogPost', payload);
+    },
+    async updatePost({commit, dispatch}, payload) {
+      commit("filterBlogPost", payload);
+      await dispatch("getPost");
+    },
   },
   modules: {
   }

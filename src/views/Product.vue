@@ -2,7 +2,8 @@
   <div class="container">
       <h4 class="nav">Home > SHOP > Product</h4>
       <div class="infos">
-        <img src="" alt="">
+        <img :src="this.currentProduct[0].productPhoto" alt="product" v-if="this.currentProduct[0].productPhoto">
+        <img src="../assets/blogPhotos/coding.jpg" alt="image unavailable" v-if="!this.currentProduct[0].productPhoto">
         <div class="info">
           <div class="product-details">
                 <h2 class="product-name">{{ this.currentProduct[0].productName}}</h2>
@@ -33,7 +34,7 @@
             </div>
             <div class="total">
               <h4 class="total-price-desc">총 상품금액({{ this.quantity }}개)</h4>
-              <h3 class="total-price">{{ totalProductPrice }}원</h3>
+              <h3 class="total-price">{{ totalPrice }}원</h3>
             </div>
             <div class="btns">
               <router-link class="buy-btn" :to="{name: 'ShopPayment'}" v-if="this.currentProduct[0].productRemainQuantity">구매하기</router-link>
@@ -110,9 +111,10 @@ export default {
     }
   },
   async mounted() {
+    
     this.currentProduct = await this.$store.state.sampleProducts.filter((post) => {
       return post.productId === this.$route.params.productId;
-    });  
+    });
   },
   computed: {
     productPrice() {
@@ -120,6 +122,10 @@ export default {
       return finalPrice;
     },
     totalProductPrice() {
+      let finalPrice = (this.currentProduct[0].productPrice * this.quantity);
+      return finalPrice.toLocaleString();
+    },
+    totalPrice() {
       let finalPrice = (this.currentProduct[0].productPrice * this.quantity) + this.deliPay;
       finalPrice = finalPrice.toLocaleString();
       return finalPrice;
@@ -173,8 +179,10 @@ export default {
     img {
       width: 600px;
       height: 600px;
+      object-fit: cover;
       background-color: #aaa;
       margin-right: 100px;
+
     }
     .info {
       width: 100%;
@@ -192,9 +200,7 @@ export default {
             color: #7ba3c5;
             font-size: 20px;
           }
-          .icon{
 
-          }
         }
         .deli-price-desc {
           display: flex;

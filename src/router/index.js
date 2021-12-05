@@ -11,6 +11,7 @@ import MyPage from '../views/MyPage.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import SiteJoinAgreement from '../views/SiteJoinAgreement.vue';
+import ProductEditor from '../views/ProductEditor.vue'; 
 Vue.use(VueRouter);
 
 const routes = [
@@ -68,6 +69,12 @@ const routes = [
         path: "/site_join_agreement",
         name: "SiteJoinAgreement",
         component: SiteJoinAgreement,
+    },
+    
+    {
+        path: "/product-editor",
+        name: "ProductEditor",
+        component: ProductEditor,
     },
 ];
 
