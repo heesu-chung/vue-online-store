@@ -7,8 +7,8 @@
               <label for="product-photo" class="product-photo" >제품 사진 : </label>
               <input type="file" ref="productPhoto" id="product-photo" @change="fileChange" name="" accept=".jpg, .png, .jpeg, .gif">
               <button @click="openPreview" class="preview-photo" :class="{'button-inactive': !this.$store.state.productPhotoURL }">미리보기</button>
-              <span class="file-name">{{ this.$store.state.productPhotoName }}</span>
           </div>
+          <span class="file-name">File-Chosen : {{ this.$store.state.productPhotoName }}</span>
           <div class="product-info">
               <input type="text" class="product-price" placeholder="제품 가격(number)" v-model="productPrice">
               <input type="text" class="product-remain" placeholder="제품 수량(number)" v-model="productRemainQuantity">
@@ -19,10 +19,13 @@
           <vue-editor 
             :editorOptions="editorSettings"
             v-model="productHTML"
-            useCustomHandler
-            @image-added="imageHandler" />
+            useCustomImageHandler
+            @image-added="imageHandler"
+            />
       </div>
-
+        <div class="error-msg">
+            <span>Error : {{errorMsg}}</span>
+        </div>
       <div class="post-uploads">
           <button @click="uploadProduct">등록하기</button>
           <button @click="preview">미리보기</button>
@@ -35,7 +38,7 @@ import Quill from 'quill';
 import "firebase/compat/storage";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import db from "../firebase/firebaseInit.vue";
+import db from "../firebase/firebaseInit";
 
 window.Quill = Quill;
 const ImageResize = require("quill-image-resize-module").default;
@@ -64,9 +67,10 @@ export default {
             this.$store.commit("openPhotoPreview");
         },
         fileChange() {
-            this.file = this.$ref.productPhoto.files[0];
-            const fileName = this.file.name;
-
+            this.file = this.$refs.productPhoto.files[0];
+            const fileName = this.file.name;    
+            console.log("fileChange exec : " + this.file.name);
+            console.log(this.$store.state.productPhotoName);
             this.$store.commit("fileNameChange", fileName);
             this.$store.commit("createFileURL", URL.createObjectURL(this.file));
         },
@@ -87,43 +91,59 @@ export default {
         },
 
         uploadProduct() {
-            if(this.productName.length !== 0 && this.productHTML.length !== 0) {
+            if(this.productName.length !== 0) {
                 if(this.file) {
                     const storageRef = firebase.storage().ref();
-                    const docRef = storageRef.child(`documents/ProductCoverPhotos/${this.$store.state.productPhotoName}`);
+                    const docRef = storageRef.child(`documents/ProductPhotos/${this.$store.state.productPhotoName}`);
+                    console.log(storageRef, docRef);
                     docRef.put(this.file).on("state_changed", (snapshot) => {
                         console.log(snapshot);
                     }, (err) => {
                         console.log(err);
-                    }, async () => {
+                    } , async () => {
                         const downloadURL = await docRef.getDownloadURL();
                         const timestamp = await Date.now();
                         const dataBase = await db.collection("shopPosts").doc();
-
                         await dataBase.set({
                             productId: dataBase.id,
                             productName: this.productName,
-                            productPrice: this.productPrice,
-                            productRemainQuantity: this.productRemainQuantity,
+                            productPrice: parseInt(this.productPrice),
+                            productRemainQuantity: parseInt(this.productRemainQuantity),
                             productWishes: 0,
                             productDeliveryPrice: 0,
                             productPhoto: downloadURL,
-                            //productPhotoName: this.productPhotoName,
+                            productCoverPhotoName: this.productPhotoName,
                             productUpdateDate: timestamp,
                             productHTML: this.productHTML,
                         });
+                        console.log("this.productPhotoName : " + this.productPhotoName);
                         await this.$store.dispatch("getPost");
                         this.$router.push({name: 'Home'});
-                    })
-                    
+                    });
+                    return;
                 }
+                 this.error = true;
+                this.errorMsg = "Please ensure you uploaded a cover photo!";
+                setTimeout(() => {
+                    this.error = false;
+                }, 5000);
+                return;
             }
+            this.error = true;
+            this.errorMsg = "Please ensure Blog Title & Blog Post has been filled!";
+            setTimeout(() => {
+                this.error = false;
+            }, 5000);
+            return;
         },
         preview() {
 
         }
     },
     computed: {
+        productCoverPhotoName() {
+            return this.$store.state.productPhotoName;
+        },
         productName: {
             get() {
                 return this.$store.state.productName;
@@ -155,9 +175,6 @@ export default {
             set(payload) {
                 this.$store.commit("newProductPost", payload);
             }
-        },
-        productPhotoName() {
-            return this.$store.state.productPhotoName;
         },
     },
 }

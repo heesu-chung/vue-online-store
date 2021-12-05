@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import db from "../firebase/firebaseInit";
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -32,7 +36,7 @@ export default new Vuex.Store({
     productWishes: null,
     productDeliveryPrice: null,
     productPhoto: null,
-    productPhotoName: '',
+    productPhotoName: null,
     productPhotoURL: null,
 
     productUpdateDate: null,
@@ -52,14 +56,17 @@ export default new Vuex.Store({
     profileMessage: [],
   },
   mutations: {
+    updateUser(state,payload) {
+      state.user = payload;
+    },
     openPhotoPreview(state) {
-      state.blogPhotoPreview = !state.blogPhotoPreview;
+      state.productPhotoPreview = !state.productPhotoPreview;
     },
     fileNameChange(state, payload) {
-      state.blogPhotoName = payload;
+      state.productPhotoName = payload;
     },
     createFileURL(state, payload) {
-      state.blogPhotoFileURL = payload;
+      state.productPhotoFileURL = payload;
     },
 
     // ProductEditor mutations
@@ -77,8 +84,15 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async getCurrentUser({commit}) {
+      const dataBase = await db.collection('users').doc(firebase.auth().currentUser.uid);
+      const dbResults = await dataBase.get();
+      commit("setProfileInfo", dbResults);
+      commit("setProfileInitials");
+      console.log(dbResults);
+    },
     async getPost({ state }) {
-      const dataBase = await db.collection('shopPosts').orderBy('date', 'desc');
+      const dataBase = await db.collection('shopPosts').orderBy('productUpdateDate', 'desc');
       const dbResults = await dataBase.get();
       dbResults.forEach((doc) => {
         if (!state.shopPosts.some(post => post.productId === doc.id)) {
@@ -90,6 +104,7 @@ export default new Vuex.Store({
             productWishes: doc.data().productWishes,
             productDeliveryPrice: doc.data().productDeliveryPrice,
             productPhoto: doc.data().productPhoto,
+            productPhotoName: doc.data().productPhotoName,
             productUpdateDate: doc.data().productUpdateDate,
             productHTML: doc.data().productHTML,
           };  
@@ -98,16 +113,7 @@ export default new Vuex.Store({
       });
       state.postLoaded = true;
     },
-    async deletePost({commit}, payload) {
-      const getPost = await db.collection('blogPost').doc(payload);
-      await getPost.delete();
-      commit('filterBlogPost', payload);
-    },
-    async updatePost({commit, dispatch}, payload) {
-      commit("filterBlogPost", payload);
-      await dispatch("getPost");
-    },
   },
   modules: {
-  }
+  },
 })

@@ -4,7 +4,7 @@
     <!-- :post v-for :key -->
     <div class="product-cards-wrap">
       <div class="product-cards">
-        <ProductCard :post="post" v-for="(post, index) in sampleProducts" :key="index"/>
+        <ProductCard :post="post" v-for="(post, index) in shopPosts" :key="index"/>
       </div>
     </div>
     <div class="page">
@@ -18,14 +18,26 @@
 
 <script>
 import ProductCard from '../components/ProductCard.vue';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 export default {
     name: 'Shop',
     components: {
       ProductCard,
     },
+    created() {
+       this.$store.dispatch('getPost');
+       firebase.auth().onAuthStateChanged((user) => {
+        this.$store.commit("updateUser", user);
+        console.log(`on auth`);});
+    },
     computed: {
       sampleProducts() {
         return this.$store.state.sampleProducts;
+      },
+      shopPosts() {
+        //console.log(this.$store.state.shopPosts);
+        return this.$store.state.shopPosts;
       },
     }
 }
