@@ -29,7 +29,7 @@ export default {
        this.$store.dispatch('getPost');
        firebase.auth().onAuthStateChanged((user) => {
         this.$store.commit("updateUser", user);
-        console.log(`on auth`);});
+      });
     },
     computed: {
       sampleProducts() {

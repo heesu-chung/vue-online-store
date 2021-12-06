@@ -9,7 +9,8 @@
 <script>
 import Navigation from './components/Navigation.vue';
 import Footer from './components/Footer.vue';
-
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 export default {
   name: "app",
   components: {
@@ -19,8 +20,18 @@ export default {
   data() {
     return {};
   },
-  created() {},
-  mounted() {},
+  created() {
+    window.location.reload;
+    firebase.auth().onAuthStateChanged((user) => {
+      this.$store.commit('updateUser', user);
+      if(user) {
+        this.$store.dispatch('getCurrentUser');
+      }
+    });
+    //console.log(firebase.auth().currentUser.uid);
+  },
+  mounted() {
+  },
   methods: {},
   watch: {},
 };

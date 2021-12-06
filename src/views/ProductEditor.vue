@@ -70,6 +70,7 @@ export default {
             this.file = this.$refs.productPhoto.files[0];
             const fileName = this.file.name;    
             console.log("fileChange exec : " + this.file.name);
+            
             console.log(this.$store.state.productPhotoName);
             this.$store.commit("fileNameChange", fileName);
             this.$store.commit("createFileURL", URL.createObjectURL(this.file));
@@ -112,7 +113,7 @@ export default {
                             productWishes: 0,
                             productDeliveryPrice: 0,
                             productPhoto: downloadURL,
-                            productCoverPhotoName: this.productPhotoName,
+                            productPhotoName: this.productPhotoName,
                             productUpdateDate: timestamp,
                             productHTML: this.productHTML,
                         });
@@ -141,7 +142,7 @@ export default {
         }
     },
     computed: {
-        productCoverPhotoName() {
+        productPhotoName() {
             return this.$store.state.productPhotoName;
         },
         productName: {

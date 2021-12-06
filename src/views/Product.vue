@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <h4 class="nav">Home > SHOP > Product</h4>
+      <h4 class="nav">Home > SHOP > Product</h4>  
       <div class="infos">
         <img :src="this.currentProduct[0].productPhoto" alt="product" v-if="this.currentProduct[0].productPhoto">
         <img src="../assets/blogPhotos/coding.jpg" alt="image unavailable" v-if="!this.currentProduct[0].productPhoto">
@@ -42,7 +42,7 @@
               <div class="soldout-message" v-if="!this.currentProduct[0].productRemainQuantity">
                 품절된 상품입니다.
               </div>
-              <button class="btn">하트</button>
+              <button class="btn" @click="likes">하트</button>
             </div>
         </div>
       </div>
@@ -90,7 +90,12 @@
       </div>
 
       <Question />
-
+      <div class="board-title">
+          <h5 class="post-status">상태</h5>
+          <h5 class="post-title">제목</h5>
+          <h5 class="post-writer">작성자</h5>
+          <h5 class="post-date">등록일</h5>
+      </div>
   </div>
 </template>
 
@@ -112,7 +117,7 @@ export default {
   },
   async mounted() {
     
-    this.currentProduct = await this.$store.state.sampleProducts.filter((post) => {
+    this.currentProduct = await this.$store.state.shopPosts.filter((post) => {
       return post.productId === this.$route.params.productId;
     });
   },
@@ -155,6 +160,14 @@ export default {
       else this.deliPay = 3000;
       //console.log("deliPay is " + this.deliPay)
     },
+
+    likes() {
+
+        // insert the wish in firebase database
+        console.log(`you like it`);
+        return;
+      
+    }
   },
   watch: {
 
@@ -164,7 +177,7 @@ export default {
 
 <style lang="scss" scoped>
 *{
-    font-family: helvetica;
+  font-family: 'Noto Sans KR', sans-serif;
   font-weight: 400;
 }
 .container {
@@ -379,12 +392,49 @@ export default {
     justify-content: center;
     cursor: pointer;
     margin-top: 50px;
+    color: #aaa;
     h4 {
+      display: flex;
+      align-items: center;
+    }
+    .detail, .qna {
       font-family: 'Noto Sans KR', sans-serif;
       font-size: 13px;
       padding: 0 20px;
+      transition: .3s all ease;
+      &:hover {
+      color: #000;
+     }
+    }
+    .detail {
+      color: #000;
     }
     
+    
+  }
+  .board-title {
+    width: 100%;
+    margin-bottom: 80px;
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid black;
+    border-bottom: 1px solid #ccc;
+    padding: 7px 0;
+    text-align: center;
+    font-weight: 700;
+    .post-status {
+      flex: 1;
+    
+    }
+    .post-title{
+      flex: 7;
+    }
+    .post-writer{
+      flex: 2;
+    }
+    .post-date{
+      flex: 2;
+    }
   }
 }
 </style>

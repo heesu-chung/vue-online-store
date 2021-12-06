@@ -1,18 +1,18 @@
 <template>
   <div class="container">
       <h4 class="title">Login</h4>
-      <input type="text" class="email" placeholder="이메일">
-      <input type="text" class="password" placeholder="비밀번호">
+      <input type="text" class="email" v-model="email" placeholder="이메일">
+      <input type="text" class="password" v-model="password" placeholder="비밀번호">
       <div class="remain">
           <input type="checkbox" name="sustain" id="sustain" class="sustain">
           <h5>로그인 상태유지</h5>
       </div>
-    <button class="login">
+    <button class="login" @click.prevent="login">
         로그인
     </button>
     <div class="register-forgot">
-        <router-link class="register" :to="{name: 'register'}">회원가입</router-link>
-        <router-link class="forgot-password" :to="{name: 'register'}">아이디 / 패스워드 찾기</router-link>
+        <router-link class="register" :to="{name: 'Register'}">회원가입</router-link>
+        <router-link class="forgot-password" :to="{name: 'Register'}">아이디 / 패스워드 찾기</router-link>
     </div>
     <div class="or">
         <span></span>
@@ -40,8 +40,34 @@
 </template>
 
 <script>
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 export default {
     name: 'Login',
+    data() {
+        return {
+            email: null,
+            password: null,
+            error: null,
+            errorMsg: null,
+        }
+    },
+    methods: {
+        login() {
+            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(() => {
+                this.$router.push({name: 'Home'});
+                //this.$store.state.user = true;
+                this.error = false;
+                this.errorMsg = "";
+                //console.log(firebase.auth().currentUser.uid);
+            }).catch(err => {
+                this.err = true;
+                this.errorMsg = err.message;
+                console.log(this.errorMsg);
+            })
+        },
+    }
+
 }
 </script>
 

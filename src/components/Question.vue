@@ -47,8 +47,16 @@ export default {
         background-color: #fff;
         width: 100px;
         height: 40px;
+        font-size: 12px;
         font-family: 'Noto Sans KR', sans-serif;
         letter-spacing: 1px;
+        margin-right: 5px;
+        transition: .3s all ease;
+        cursor: pointer;
+            &:hover {
+                background-color: #000;
+                color: #fff;
+            }
         }
     }
   padding: 30px 0;

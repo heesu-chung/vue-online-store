@@ -36,7 +36,7 @@ const routes = [
         component: Contact,
     },
     {
-        path: "/product",
+        path: "/product/:productId",
         name: "Product",
         component: Product,
     },
@@ -52,7 +52,7 @@ const routes = [
     },
     {
         path: "/shop-mypage",
-        name: "My Page",
+        name: "MyPage",
         component: MyPage,
     },
     {
@@ -82,6 +82,11 @@ const router = new VueRouter({
     mode: "history",
     base: process.env.BASE_URL,
     routes,
+    scrollBehavior() {
+        //document.getElementById('app').scrollIntoView();
+        window.scrollTo(0,0);
+    },
 });
+
 
 export default router;

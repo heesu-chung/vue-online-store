@@ -17,9 +17,13 @@
           </div>
 
             <div class="right-element">
-                <div class="auth">
+                <div class="auth" v-if="user">
+                    <router-link  class="login" :to="{name: 'MyPage'} " >{{ this.$store.state.profileName }}</router-link>
+                    <router-link  @click="signOut" class="register" :to="{name: 'Login'}">Logout</router-link>
+                </div>
+                <div class="auth" v-if="!user">
                     <router-link class="login" :to="{name: 'Login'}">Login</router-link>
-                    <router-link class="register" :to="{name: 'SiteJoinAgreement'}">Register</router-link>
+                    <div class="register" >Register</div>
                 </div>
                 <div class="menu">
                     <router-link :to="{name: 'ShopCart'}" class="shop-list">Shop Cart</router-link>
@@ -41,13 +45,30 @@
 </template>
 
 <script>
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 export default {
     name: 'Navigation',
+
     data() {
         return {
             mobile: null,
+            username: null,
         }
     },
+    computed: {
+        user() {
+            return this.$store.state.user;
+        }
+    },
+    methods: {
+        signOut() {
+            firebase.auth().signOut();
+            //this.$store.state.user = false;
+            window.location.reload;
+        },
+        
+    }
 }
 </script>
 
@@ -140,12 +161,14 @@ header {
                         padding-right: 20px;
                         color: #000;
                         text-decoration: none;
+                        font-weight: 700;
                 }
                 .register {
                     border-right: 1px solid #666;
                     padding-right: 20px;
                     text-decoration: none;
                     color: #000;
+                    cursor: pointer;
                 }
             }
             .menu {

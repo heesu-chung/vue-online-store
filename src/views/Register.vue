@@ -4,9 +4,9 @@
     <img src="" alt="">
     
     <div class="inputs">
-      <input type="text" class="email" placeholder="이메일">
-      <input type="text" class="pw" placeholder="비밀번호">
-      <input type="text" class="pw-check" placeholder="비밀번호 확인">
+      <input type="text" class="email" v-model="email" placeholder="이메일">
+      <input type="text" class="pw" v-model="password" placeholder="비밀번호">
+      <input type="text" class="pw-check" v-model="passwordCheck" placeholder="비밀번호 확인">
     </div>
 
     <div class="names">
@@ -14,16 +14,70 @@
         <h5>이름</h5>
         <div class="circle"></div>
       </div>
-      <input type="text" class="name" placeholder="이름을(를) 입력하세요">
+      <input type="text" class="name" v-model="name" placeholder="이름을(를) 입력하세요">
     </div>
 
-    <button class="sign-in">가입하기</button>
+    <button class="sign-in" @click.prevent="register">가입하기</button>
   </div>
 </template>
 
 <script>
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import db from "../firebase/firebaseInit";
+
 export default {
     name: 'Register',
+    data() {
+      return {
+        email: "",
+        password: "",
+        passwordCheck: "",
+        name: "",
+        error: null,
+        errorMsg: "",
+      }
+    },
+    methods: {
+      async register() {
+        if(this.email !== "" && 
+        this.password !== "" &&
+        this.passwordCheck !== "" &&
+        this.name !== "" &&
+        this.password === this.passwordCheck) {
+          this.error = false;
+          this.errorMsg = "";
+
+          const firebaseAuth = await firebase.auth();
+          const createUser = await firebaseAuth.createUserWithEmailAndPassword(this.email, this.password);
+          const result = await createUser;
+
+          const dataBase = db.collection("users").doc(result.user.uid);
+          await dataBase.set({
+            profileName: this.name,
+            profileEmail: this.email,
+            profilePassword: this.password,
+            profileId: this.email,
+            profileShopList: [],
+            profileWishList: [],
+            profileCoverPhoto: null,
+            profileGrade: 1,
+            isManager: false,
+            profileMessage: [],
+          });
+          this.$router.push({name: 'Login'});
+          return;
+        }
+        if(this.password !== this.passwordCheck) {
+          this.error = true;
+          this.errorMsg = "Wrong Password";
+        }
+        this.error = true;
+        this.errorMsg = "Please fill out all the fields!";
+        return;
+      },
+    }
+
 }
 </script>
 
