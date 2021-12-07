@@ -21,14 +21,13 @@ export default {
     return {};
   },
   created() {
-    window.location.reload;
     firebase.auth().onAuthStateChanged((user) => {
       this.$store.commit('updateUser', user);
       if(user) {
         this.$store.dispatch('getCurrentUser');
       }
     });
-    //console.log(firebase.auth().currentUser.uid);
+    //console.log(`firebase.auth().currentUser.uid : ` + firebase.auth().currentUser.uid);
   },
   mounted() {
   },

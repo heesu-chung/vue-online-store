@@ -38,7 +38,7 @@
             </div>
             <div class="btns">
               <router-link class="buy-btn" :to="{name: 'ShopPayment'}" v-if="this.currentProduct[0].productRemainQuantity">구매하기</router-link>
-              <router-link class="btn" :to="{name: 'ShopCart'}" v-if="this.currentProduct[0].productRemainQuantity">장바구니</router-link>
+              <div class="btn" @click="shoplist" v-if="this.currentProduct[0].productRemainQuantity">장바구니</div>
               <div class="soldout-message" v-if="!this.currentProduct[0].productRemainQuantity">
                 품절된 상품입니다.
               </div>
@@ -102,6 +102,11 @@
 <script>
 import Description from '../components/Description.vue';
 import Question from '../components/Question.vue';
+
+import "firebase/compat/storage";
+import firebase from "firebase/compat/app";
+import db from "../firebase/firebaseInit";
+
 export default {
   name: 'Product',
   components: {
@@ -113,13 +118,17 @@ export default {
       currentProduct: null,
       quantity: 1,
       deliPay: 0,
+      routeId: null,
+
     }
   },
   async mounted() {
-    
     this.currentProduct = await this.$store.state.shopPosts.filter((post) => {
       return post.productId === this.$route.params.productId;
     });
+
+    //this.routeId = this.$route.params.profileId;
+    //console.log(`this.routeId is ` + this.routeId);
   },
   computed: {
     productPrice() {
@@ -146,6 +155,8 @@ export default {
         return false;
       }
     }
+
+
   },
   methods: {
     minus() {
@@ -162,12 +173,33 @@ export default {
     },
 
     likes() {
-
         // insert the wish in firebase database
         console.log(`you like it`);
-        return;
+        return; 
+    },
+    async shoplist() {
+      console.log(firebase.auth().currentUser.uid + `  need to add shop list`);
+      const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
       
-    }
+      // 
+      console.log(`firebase.auth().currentUser : `) // get array
+      console.log(firebase.auth().currentUser);
+      console.log(`firebase.auth().currentUser.uid :`); // get currentUser.uid
+      console.log(firebase.auth().currentUser.uid);
+      console.log(`db.collection("users") : `); // get array
+      console.log(db.collection("users"));
+      console.log(`db.collection("users").doc() : `); // get array
+      console.log(db.collection("users").doc());
+      /*console.log(`db.collection("users").doc(firebase.auth().currentUser : `); // error
+      console.log(db.collection("users").doc(firebase.auth().currentUser));*/
+      console.log(`db.collection("users").doc(firebase.auth().currentUser.uid : (database) :`);
+      console.log(dataBase);
+      
+      await dataBase.update({
+
+      });
+      //await this.$store.dispatch("updateUserShopList", );
+    },
   },
   watch: {
 
@@ -269,6 +301,7 @@ export default {
               padding-top: 5px;
               display: flex;
               justify-content: center;
+              margin-top: -3px;
             }
             .plus {
               flex: 1;
@@ -341,6 +374,7 @@ export default {
           align-items: center;
           justify-content: center;
           transition: .3s all ease;
+          cursor: pointer;
           &:hover {
             border: 1px solid black;
           }

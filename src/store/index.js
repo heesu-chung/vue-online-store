@@ -11,7 +11,7 @@ const state = {
   // Shop Posts
   shopPosts: [],
   postLoaded: null,
-
+  
   // Product Info
   user: null,
   
@@ -115,6 +115,9 @@ const actions = {
       }
     });
     state.postLoaded = true;
+  },
+  async updateUserShopList() {
+    
   },
 }
 export default new Vuex.Store({

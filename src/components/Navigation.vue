@@ -18,8 +18,8 @@
 
             <div class="right-element">
                 <div class="auth" v-if="user">
-                    <router-link  class="login" :to="{name: 'MyPage'} " >{{ this.$store.state.profileName }}</router-link>
-                    <router-link  @click="signOut" class="register" :to="{name: 'Login'}">Logout</router-link>
+                    <router-link  class="login" @click="clickProfileName" :to="{name: 'MyPage'} " >{{ this.$store.state.profileName }}</router-link>
+                    <div  @click="signout" class="register" >Logout</div>
                 </div>
                 <div class="auth" v-if="!user">
                     <router-link class="login" :to="{name: 'Login'}">Login</router-link>
@@ -62,12 +62,15 @@ export default {
         }
     },
     methods: {
-        signOut() {
+        signout() {
+            console.log("sign out");
             firebase.auth().signOut();
             //this.$store.state.user = false;
             window.location.reload;
         },
-        
+        clickProfileName() { // router-link can't use methods or @click
+            console.log(`you click profileName`);
+        }
     }
 }
 </script>
