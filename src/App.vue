@@ -46,7 +46,9 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
-
+.container-wrap {
+  width: 100%;
+}
 .app {
   display: flex;
   flex-direction: column;

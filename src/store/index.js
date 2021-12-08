@@ -41,6 +41,7 @@ const state = {
   profileGrade: null,
   isManager: null,
   profileMessage: [],
+  registerDate: null,
 };
 
 const mutations = {
@@ -82,6 +83,7 @@ const mutations = {
     state.isManager = doc.data().isManager;
     state.profileCoverPhoto = doc.data().profileCoverPhoto;
     state.profilePassword = doc.data().profilePassword;
+    state.registerDate = doc.data().registerDate;
   },
 }
 

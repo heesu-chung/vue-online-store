@@ -51,7 +51,7 @@ export default {
           const firebaseAuth = await firebase.auth();
           const createUser = await firebaseAuth.createUserWithEmailAndPassword(this.email, this.password);
           const result = await createUser;
-
+          const timestamp = await Date.now();
           const dataBase = db.collection("users").doc(result.user.uid);
           await dataBase.set({
             profileName: this.name,
@@ -64,6 +64,7 @@ export default {
             profileGrade: 1,
             isManager: false,
             profileMessage: [],
+            registerDate: timestamp,
           });
           this.$router.push({name: 'Login'});
           return;

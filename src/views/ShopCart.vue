@@ -20,16 +20,16 @@
       </div-->
     </div>
 
-    <ShopListCard />
+    <ShopListCard :shopList="shopList" v-for="(shopList, index) in shopLists" :key="index"/>
 
     <div class="overview">
       <div class="total-price">
         <h3>상품가격</h3>
-        <h3 class="price">308,000원</h3>
+        <div class="price">{{getProductPrice}}원</div>
       </div>
       <div class="deli-price">
         <h3>배송비</h3>
-        <h3 class="price">무료</h3>
+        <div class="price">{{getDeliPrice}}</div>
       </div>
     </div>
 
@@ -40,7 +40,7 @@
       </div>
       <div class="total-fee">
         <h4>결제금액</h4>
-        <h2>308,000원</h2>
+        <h2 >{{getTotalPrice}}원</h2>
       </div>
     </div>
     <div class="actions">
@@ -51,7 +51,7 @@
     <div class="wish-list-wrap">
       <div class="view-wishes">
         <h3 class="wish-list">위시 리스트</h3>
-        <button class="more-info">더보기</button>
+        <router-link class="more-info" :to="{name: 'Shop'}">더보기</router-link>
       </div>
     </div>
 
@@ -69,6 +69,30 @@ export default {
     components: {
       ShopListCard,
       ProductCard,
+    },
+    data() {
+      return {
+        productPrice: 0,
+        deliPrice: 0,
+      }
+    },
+    computed: {
+      getTotalPrice() {
+        return (this.productPrice + this.deliPrice).toLocaleString();
+      },
+      getProductPrice() {
+        return this.productPrice.toLocaleString();
+      },
+      getDeliPrice() {
+        if(this.deliPrice === 0) {
+          return '무료';
+        }
+        return this.deliPrice.toLocaleString() + `원`;
+      },
+
+      shopLists() {
+        return this.$store.state.profileShopList;
+      }
     }
 }
 </script>
@@ -77,6 +101,7 @@ export default {
 *{
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 400;
+  //border: 1px solid black;
 }
 
 .container {
@@ -113,33 +138,37 @@ export default {
     color: #000;
     font-family: helvetica;
     font-weight: 400;
+    text-align: center;
+    // 1 : 8 : 1 : 2 : 2 : 2 : 2 : 3
     .checkbox {
       cursor: pointer;
-      
+      flex: 1;
     }
     .item {
-      margin-left: 30px;
       width: 40%;
-      
+      text-align: left;
+      flex: 8;
     }
     .wish {
-      padding: 0 30px; 
+      flex: 1;
     }
     .quantity {
-      padding: 0 30px;
+      flex: 2;
     }
     .deli-method {
-      padding: 0 30px;
+      flex: 2;
     }
     .deli-price {
-      padding: 0 30px;
+      flex:2;
+      //border: 1px solid black;
+
     }
     .price {
-      width: 12%;
+      flex: 2;
       text-align: right;
     }
     .order-service {
-      
+      flex: 3;
     }
   }
 
@@ -152,16 +181,23 @@ export default {
     .total-price {
       display: flex;
       flex-direction: row;
+      width: 53%;
+      justify-content: space-between;
+      
       .price{
-        padding: 0 64px;
+        font-size: 14px;
+        
       }
     }
     .deli-price {
       margin-top: 10px;
       display: flex;
       flex-direction: row;
+      width: 53%;
+      justify-content: space-between;
+      
       .price {
-        margin-left: 120px;
+        font-size: 14px;
       }
     } 
   }
@@ -169,7 +205,7 @@ export default {
   .overall {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    
     .options{
       .option {
         background-color: #fff;
@@ -188,8 +224,9 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: center;
-      margin-left: 53%;
       
+      
+      border: 1px solid black;
       h4 {
         font-size: 12px;
         margin-right: 30px;
@@ -264,6 +301,12 @@ export default {
         margin-right: 20px;
       }
       .more-info {
+        display: flex;
+        text-decoration: none;
+        color: #000;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
         width: 60px;
         height: 30px;
         border-radius: 15px;

@@ -1,4 +1,6 @@
 <template>
+  <div class="container-wrap">
+    <ProductModal v-if="modalActive" :modalMessage="modalMessage" v-on:close-modal="closeModal" />    
   <div class="container">
       <h4 class="nav">Home > SHOP > Product</h4>  
       <div class="infos">
@@ -97,11 +99,14 @@
           <h5 class="post-date">등록일</h5>
       </div>
   </div>
+  </div>
+  
 </template>
 
 <script>
 import Description from '../components/Description.vue';
 import Question from '../components/Question.vue';
+import ProductModal from '../components/ProductModal.vue';
 
 import "firebase/compat/storage";
 import firebase from "firebase/compat/app";
@@ -112,6 +117,7 @@ export default {
   components: {
     Description,
     Question,
+    ProductModal,
   },
   data() {
     return {
@@ -119,7 +125,11 @@ export default {
       quantity: 1,
       deliPay: 0,
       routeId: null,
+      //productList: [],
+      modalMessage: '선택하신 상품을 장바구니에 담았습니다',
+      modalActive: false,
 
+      isProductExistOnDB: false,
     }
   },
   async mounted() {
@@ -143,6 +153,9 @@ export default {
       let finalPrice = (this.currentProduct[0].productPrice * this.quantity) + this.deliPay;
       finalPrice = finalPrice.toLocaleString();
       return finalPrice;
+    },
+    totalProductPriceWithoutToLocaleString() {
+      return this.currentProduct[0].productPrice * this.quantity;
     },
     isFree() {
       let finalPrice = this.currentProduct[0].productPrice * this.quantity;      
@@ -178,28 +191,49 @@ export default {
         return; 
     },
     async shoplist() {
-      console.log(firebase.auth().currentUser.uid + `  need to add shop list`);
       const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
-      
-      // 
-      console.log(`firebase.auth().currentUser : `) // get array
-      console.log(firebase.auth().currentUser);
-      console.log(`firebase.auth().currentUser.uid :`); // get currentUser.uid
-      console.log(firebase.auth().currentUser.uid);
-      console.log(`db.collection("users") : `); // get array
-      console.log(db.collection("users"));
-      console.log(`db.collection("users").doc() : `); // get array
-      console.log(db.collection("users").doc());
-      /*console.log(`db.collection("users").doc(firebase.auth().currentUser : `); // error
-      console.log(db.collection("users").doc(firebase.auth().currentUser));*/
-      console.log(`db.collection("users").doc(firebase.auth().currentUser.uid : (database) :`);
-      console.log(dataBase);
+      console.log(this.$store.state.profileShopList);
+      const timestamp = await Date.now();
+        
+      // if product already in List
+      this.$store.state.profileShopList.forEach((post) => {
+        if(post.productId === this.$route.params.productId && !post.orderDone) {
+          post.productQuantity += this.quantity;
+          this.isProductExistOnDB = true;
+          post.totalProductPrice += this.quantity * this.
+          currentProduct[0].productPrice;
+          post.orderDate = timestamp;
+        }
+      });
+      if(!this.isProductExistOnDB) {
+        this.$store.state.profileShopList.push({
+          uid: firebase.auth().currentUser.uid,
+          profileId: this.$store.state.profileId,
+          productName: this.$route.params.productName,
+          productId: this.$route.params.productId,
+          productPhotoName: this.$route.params.productPhotoName,
+          productCoverPhoto: this.$route.params.productCoverPhoto,
+          productQuantity: this.quantity,
+          totalProductPrice: this.totalProductPriceWithoutToLocaleString,
+          orderDone: false,
+          orderDate: timestamp,
+          DeliveryDone: false,
+          DeliveryDate: null,
+          Address: null,
+        });
+      }
       
       await dataBase.update({
-
+        profileShopList: this.$store.state.profileShopList,
       });
-      //await this.$store.dispatch("updateUserShopList", );
+      this.isProductExistOnDB = false;
+      this.modalActive = true;
+      return;
     },
+
+    closeModal() {
+      this.modalActive = !this.modalActive;
+    }
   },
   watch: {
 
