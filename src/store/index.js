@@ -11,7 +11,8 @@ const state = {
   // Shop Posts
   shopPosts: [],
   postLoaded: null,
-  
+  totalPrice: null,
+  deliPrice:null,
   // Product Info
   user: null,
   
@@ -85,6 +86,9 @@ const mutations = {
     state.profilePassword = doc.data().profilePassword;
     state.registerDate = doc.data().registerDate;
   },
+  filterShopList(state, payload) {
+    state.shopPosts = state.shopPosts.filter((post) => post.productId !== payload);
+  },
 }
 
 const actions = {
@@ -92,11 +96,10 @@ const actions = {
     const dataBase = await db.collection('users').doc(firebase.auth().currentUser.uid);
     const dbResults = await dataBase.get();
     commit("setProfileInfo", dbResults);
-    //commit("setProfileInitials");
-    console.log(dbResults);
   },
 
   async getPost({ state }) {
+    // console.log(`getPost(actions) has been called`);
     const dataBase = await db.collection('shopPosts').orderBy('productUpdateDate', 'desc');
     const dbResults = await dataBase.get();
     dbResults.forEach((doc) => {
@@ -121,6 +124,29 @@ const actions = {
   async updateUserShopList() {
     
   },
+  async updateTotalPrice({state}) {
+    let finalPrice = 0;
+    state.profileShopList.forEach((post) => {
+          finalPrice += post.totalProductPrice;
+    });
+    if(finalPrice < 50000) state.deliPrice = 3000;
+    else state.deliPrice = 0;
+    state.totalPrice = finalPrice;
+  },
+  async deleteList({state, commit}, payload) {
+    // console.log('deleteList(actions) has been called');
+    const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
+    const result = await dataBase.get();
+    
+    const updateShopList = state.profileShopList.filter((post) => {
+      return post.productId !== payload;
+    });
+    await dataBase.update({
+      profileShopList: updateShopList,
+    });
+    commit(`setProfileInfo`, result);
+  },
+
 }
 export default new Vuex.Store({
   state,

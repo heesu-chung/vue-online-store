@@ -124,7 +124,6 @@ export default {
       currentProduct: null,
       quantity: 1,
       deliPay: 0,
-      routeId: null,
       //productList: [],
       modalMessage: '선택하신 상품을 장바구니에 담았습니다',
       modalActive: false,
@@ -133,12 +132,10 @@ export default {
     }
   },
   async mounted() {
+    this.$store.dispatch("getCurrentUser");
     this.currentProduct = await this.$store.state.shopPosts.filter((post) => {
       return post.productId === this.$route.params.productId;
     });
-
-    //this.routeId = this.$route.params.profileId;
-    //console.log(`this.routeId is ` + this.routeId);
   },
   computed: {
     productPrice() {
@@ -185,14 +182,39 @@ export default {
       //console.log("deliPay is " + this.deliPay)
     },
 
-    likes() {
-        // insert the wish in firebase database
-        console.log(`you like it`);
+    async likes() {
+        const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
+        const timestamp = await Date.now();
+
+        this.$store.state.profileWishList.forEach((post) => {
+          if(post.productId === this.$route.params.productId) {
+            this.isProductExistOnDB = true;
+            post.userWish = !post.userWish;
+            return;
+          }
+        });
+        if(!this.isProductExistOnDB){
+          this.$store.state.profileWishList.push({
+            uid: firebase.auth().currentUser.uid,
+            profileId: this.$store.state.profileId,
+            productName: this.currentProduct[0].productName,
+            productId: this.$route.params.productId,
+            productPhotoName: this.currentProduct[0].productPhotoName,
+            productPhoto: this.currentProduct[0].productPhoto,
+            date: timestamp,
+            productPrice: this.currentProduct[0].productPrice,
+            userWish: true,
+          });
+        }
+        await dataBase.update({
+          profileWishList: this.$store.state.profileWishList,
+        });
+        this.isProductExistOnDB = false;
         return; 
     },
+
     async shoplist() {
       const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
-      console.log(this.$store.state.profileShopList);
       const timestamp = await Date.now();
         
       // if product already in List
@@ -209,10 +231,9 @@ export default {
         this.$store.state.profileShopList.push({
           uid: firebase.auth().currentUser.uid,
           profileId: this.$store.state.profileId,
-          productName: this.$route.params.productName,
+          productName: this.currentProduct[0].productName,
           productId: this.$route.params.productId,
-          productPhotoName: this.$route.params.productPhotoName,
-          productCoverPhoto: this.$route.params.productCoverPhoto,
+          productPhotoName: this.currentProduct[0].productPhotoName,
           productQuantity: this.quantity,
           totalProductPrice: this.totalProductPriceWithoutToLocaleString,
           orderDone: false,

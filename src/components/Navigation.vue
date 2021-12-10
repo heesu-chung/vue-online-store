@@ -23,7 +23,7 @@
                 </div>
                 <div class="auth" v-if="!user">
                     <router-link class="login" :to="{name: 'Login'}">Login</router-link>
-                    <div class="register" >Register</div>
+                    <router-link class="register" :to="{name:'SiteJoinAgreement'}">Register</router-link>
                 </div>
                 <div class="menu">
                     <router-link :to="{name: 'ShopCart'}" class="shop-list">Shop Cart</router-link>

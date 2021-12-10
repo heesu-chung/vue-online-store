@@ -54,9 +54,9 @@
         <router-link class="more-info" :to="{name: 'Shop'}">더보기</router-link>
       </div>
     </div>
-
-    <ProductCard class="product-card"/>
-
+    <div class="product-cards">
+      <ProductCard class="product-card" :post="post" v-for="(post, idx) in wishLists" :key="idx"/>
+    </div>
   </div>
 </template>
 
@@ -76,23 +76,37 @@ export default {
         deliPrice: 0,
       }
     },
+    async mounted() {
+      this.$store.dispatch("getCurrentUser");
+    },
     computed: {
       getTotalPrice() {
         return (this.productPrice + this.deliPrice).toLocaleString();
       },
       getProductPrice() {
-        return this.productPrice.toLocaleString();
+        this.computeProductPrice();
+        return this.$store.state.totalPrice.toLocaleString();
       },
       getDeliPrice() {
-        if(this.deliPrice === 0) {
+        if(this.$store.state.deliPrice === 0) {
           return '무료';
         }
-        return this.deliPrice.toLocaleString() + `원`;
+        return this.$store.state.deliPrice.toLocaleString() + `원`;
       },
 
       shopLists() {
         return this.$store.state.profileShopList;
+      },
+      wishLists() {
+        return this.$store.state.profileWishList;
       }
+    },
+    methods: {
+      computeProductPrice() {
+        this.$store.dispatch("updateTotalPrice");
+        this.productPrice = this.$store.state.totalPrice;
+      },
+
     }
 }
 </script>
@@ -221,19 +235,24 @@ export default {
       }
     }
     .total-fee {
+      margin-left: 50%;
+      width: 17%;
       display: flex;
       flex-direction: row;
       align-items: center;
-      
-      
-      border: 1px solid black;
+      justify-content: right;
+
       h4 {
+        flex: 1;
         font-size: 12px;
-        margin-right: 30px;
+        margin-left: 8px;
+        text-align: left;
       }
       h2 {
+        flex: 2;
         font-size: 20px;
         font-weight: 700;
+        text-align: right;
         color: #7ba3c5;
       }
     }
@@ -322,7 +341,20 @@ export default {
       }
     }
   }
-  .product-card {
+  .product-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 26px;
+    row-gap: 50px;
+    @media (min-width: 500px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      @media (min-width: 900px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      @media (min-width: 1200px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
     
   }
 }

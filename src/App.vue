@@ -20,16 +20,20 @@ export default {
   data() {
     return {};
   },
-  created() {
+  async created() {
+    // console.log(`App.vue created`);
     firebase.auth().onAuthStateChanged((user) => {
       this.$store.commit('updateUser', user);
       if(user) {
         this.$store.dispatch('getCurrentUser');
       }
     });
-    //console.log(`firebase.auth().currentUser.uid : ` + firebase.auth().currentUser.uid);
+    // console.log(`App.vue created Done!`);
   },
-  mounted() {
+  async mounted() {
+    // console.log(`App.vue mounted`);
+    this.$store.dispatch('getPost');
+    // console.log(`App.vue mounted Done!`);
   },
   methods: {},
   watch: {},

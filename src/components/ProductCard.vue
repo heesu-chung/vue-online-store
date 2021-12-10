@@ -5,7 +5,7 @@
         <router-link :to="{name: 'Product'}" class="product-name">{{post.productName}}</router-link>
       </router-link>
       <h5 class="product-price">{{price}}원</h5>
-      <div class="soldout" v-show="!productNum">
+      <div class="soldout" v-show="!this.productNum">
           <h5>SOLDOUT</h5>
       </div>
   </div>
@@ -17,19 +17,35 @@ export default {
     props: ["post"],
     data() {
         return {
-            
+            productNum: null,
         }
     },
+    async mounted() {
+        // console.log(`Product.vue mounted`);
+        await this.getProductNum();
+        // console.log(`Product.vue mounted Done!`);
+    },
     computed: {
-        productNum() {
-            return this.post.productRemainQuantity;
-        },
         price() {
             let finalPrice = this.post.productPrice.toLocaleString();
             //or 정규식 사용
             return finalPrice; 
         },
-    }
+    },
+    methods: {
+        async getProductNum() {
+            // console.log(`Product.vue getProductNum()`);
+
+            await this.$store.state.shopPosts.forEach((post) => {
+                if(post.productId === this.post.productId) {
+                    this.productNum = post.productRemainQuantity;
+                    // console.log(`this.productNum changed : ` + this.productNum);
+                }
+            });
+            
+            // console.log(`Product.vue getProductNum() Done!`);
+        }
+    },
 }
 </script>
 
