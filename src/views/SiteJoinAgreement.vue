@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container" id="agreement">
       <h4>Terms & Policy</h4>
       <div class="privacy-collect">
-          <input type="checkbox" class="checkbox" name="privacy" id="privacy">
+          <input type="checkbox" class="checkbox" name="privacy" id="privacy" value="all" v-model="allChecked" @click="checkedAll($event.target.checked)">
           <h5 class="text">이용약관, 개인정보 수집 및 이용에 모두 동의합니다</h5>
       </div>
       <div class="privacy-collect">
-          <input type="checkbox" class="checkbox" name="privacy" id="privacy">
+          <input type="checkbox" class="checkbox" name="privacy" id="privacy" :value="arr[0].select" v-model="arr" @click="selected($event)">
           <h5 class="text">이용약관 동의</h5>
           <h5 class="red-text">(필수)</h5>
       </div>
@@ -133,12 +133,12 @@
 이 약관은 사이트 개설일 부터 시행합니다.</div>
   
   <div class="privacy-collect">
-          <input type="checkbox" class="checkbox" name="privacy" id="privacy">
+          <input type="checkbox" class="checkbox" name="privacy" id="privacy" :value="arr[1].select" v-model="arr" @click="selected($event)">
           <h5 class="text">개인정보 수집 및 이용 동의</h5>
           <h5 class="red-text">(필수)</h5>
       </div>
 
-    <div class="usage   ">
+    <div class="usage">
         1. 개인정보 수집목적 및 이용목적<br><br>
 
 가. 서비스 제공에 관한 계약 이행 및 서비스 제공에 따른 요금정산<br>
@@ -185,6 +185,43 @@ o 로그 기록<br>
 <script>
 export default {
     name: 'SiteJoinAgreement',
+    data() {
+        return {
+            arr: [
+                {select: false},
+                {select: false},
+            ],
+            allChecked: false,
+            /*arr1: false,
+            arr2: false,
+            arr3: false,*/
+        }
+    },
+    methods: {
+        checkedAll(checked) {
+            console.log('checked All');
+            this.allChecked = checked;
+            for(let i in this.arr) {
+                this.arr[i].selected = this.allChecked;
+            }
+        },
+        selected() {
+            console.log(`selected()`);
+            console.log(this.arr);
+            /*for(let i in this.arr) {
+                if(!this.arr[i].selected) {
+                    this.allChecked = false;
+                    return;
+                } else {
+                    this.allChecked = true;
+                }
+            }*/
+        }
+    },
+    watch: {
+        arr() {
+        },
+    },
 }
 </script>
 

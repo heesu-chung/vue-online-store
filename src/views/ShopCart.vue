@@ -6,7 +6,7 @@
     </div>
     
     <div class="category">
-      <input type="checkbox" class="checkbox" name="" id="">
+      <input type="checkbox" class="checkbox" name="shopListCard" value="all"  id="" checked>
       <div class="item">item</div>
       <div class="wish">위시</div>
       <div class="quantity">수량</div>
