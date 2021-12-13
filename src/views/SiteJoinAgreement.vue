@@ -2,11 +2,11 @@
   <div class="container" id="agreement">
       <h4>Terms & Policy</h4>
       <div class="privacy-collect">
-          <input type="checkbox" class="checkbox" name="privacy" id="privacy" value="all" v-model="allChecked" @click="checkedAll($event.target.checked)">
+          <input type="checkbox" class="checkbox" name="privacy" id="privacy" value="all" v-model="checkAll" @change="checkedAll">
           <h5 class="text">이용약관, 개인정보 수집 및 이용에 모두 동의합니다</h5>
       </div>
       <div class="privacy-collect">
-          <input type="checkbox" class="checkbox" name="privacy" id="privacy" :value="arr[0].select" v-model="arr" @click="selected($event)">
+          <input type="checkbox" class="checkbox" name="privacy" id="privacy" :value="1" v-model="arr" @change="clickFunc" >
           <h5 class="text">이용약관 동의</h5>
           <h5 class="red-text">(필수)</h5>
       </div>
@@ -133,11 +133,10 @@
 이 약관은 사이트 개설일 부터 시행합니다.</div>
   
   <div class="privacy-collect">
-          <input type="checkbox" class="checkbox" name="privacy" id="privacy" :value="arr[1].select" v-model="arr" @click="selected($event)">
+          <input type="checkbox" class="checkbox" name="privacy" id="privacy" :value="2" v-model="arr" @change="clickFunc">
           <h5 class="text">개인정보 수집 및 이용 동의</h5>
           <h5 class="red-text">(필수)</h5>
       </div>
-
     <div class="usage">
         1. 개인정보 수집목적 및 이용목적<br><br>
 
@@ -176,8 +175,10 @@ o 로그 기록<br>
 
     <div class="btns">
         <router-link class="btn" :to="{name: 'Home'}">취소</router-link>
-        <router-link class="btn-register" :to="{name: 'Register'}">가입하기</router-link>
+        <div class="btn-unfulfilled" v-if="!this.checkAll">가입하기</div>
+        <router-link class="btn-register" :to="{name: 'Register'}" v-if="this.checkAll">가입하기</router-link>
     </div>
+    
   </div>
 
 </template>
@@ -187,39 +188,25 @@ export default {
     name: 'SiteJoinAgreement',
     data() {
         return {
-            arr: [
-                {select: false},
-                {select: false},
-            ],
-            allChecked: false,
-            /*arr1: false,
-            arr2: false,
-            arr3: false,*/
+            arr: [],
+            checkAll: false,
         }
     },
     methods: {
-        checkedAll(checked) {
-            console.log('checked All');
-            this.allChecked = checked;
-            for(let i in this.arr) {
-                this.arr[i].selected = this.allChecked;
-            }
+        clickFunc() {
+            
         },
-        selected() {
-            console.log(`selected()`);
-            console.log(this.arr);
-            /*for(let i in this.arr) {
-                if(!this.arr[i].selected) {
-                    this.allChecked = false;
-                    return;
-                } else {
-                    this.allChecked = true;
-                }
-            }*/
-        }
+        checkedAll() {
+            this.arr = [1, 2];
+        },
     },
     watch: {
         arr() {
+          if(this.arr.length === 2) {
+              this.checkAll = true;
+          } else {
+              this.checkAll = false;
+          }
         },
     },
 }
@@ -229,6 +216,11 @@ export default {
 *{
     font-family: 'Noto Sans KR', sans-serif;
   font-weight: 400;
+}
+
+input[type="checkbox"] {
+    zoom: 1.25;
+    background-color: red;
 }
 
 .container {
@@ -247,6 +239,7 @@ export default {
         
         .checkbox {
             margin-right: 10px;
+            
         }
         .text {
             font-size: 13px;
@@ -297,6 +290,17 @@ export default {
             width: 100px;
             border: none;
             letter-spacing: 1px;
+        }
+        .btn-unfulfilled {
+            background-color: #ccdff0;
+            color: #fff;
+            width: 100px;
+            border: none;
+            letter-spacing: 1px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 }

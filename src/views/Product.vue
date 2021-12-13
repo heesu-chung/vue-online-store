@@ -131,7 +131,7 @@ export default {
       isProductExistOnDB: false,
     }
   },
-  async mounted() {
+  async created() {
     this.$store.dispatch("getCurrentUser");
     this.currentProduct = await this.$store.state.shopPosts.filter((post) => {
       return post.productId === this.$route.params.productId;

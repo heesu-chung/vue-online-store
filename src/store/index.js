@@ -13,6 +13,7 @@ const state = {
   postLoaded: null,
   totalPrice: null,
   deliPrice:null,
+  shopLists: [],
   // Product Info
   user: null,
   

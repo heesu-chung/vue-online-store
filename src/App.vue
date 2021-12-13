@@ -31,8 +31,9 @@ export default {
     // console.log(`App.vue created Done!`);
   },
   async mounted() {
-    // console.log(`App.vue mounted`);
+    console.log(`App.vue mounted`);
     this.$store.dispatch('getPost');
+    this.$store.dispatch('getCurrentUser');
     // console.log(`App.vue mounted Done!`);
   },
   methods: {},
@@ -116,4 +117,7 @@ export default {
   .link-light {
     color: #fff;
   }
+  input[type="checkbox"] {
+  zoom: 1.25;
+}
 </style>

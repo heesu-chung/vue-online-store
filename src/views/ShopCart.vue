@@ -76,8 +76,8 @@ export default {
         deliPrice: 0,
       }
     },
-    async mounted() {
-      this.$store.dispatch("getCurrentUser");
+    mounted() {
+      //this.$store.dispatch("getCurrentUser");
     },
     computed: {
       getTotalPrice() {
@@ -95,6 +95,7 @@ export default {
       },
 
       shopLists() {
+        console.log(this.$store.state.profileShopList);
         return this.$store.state.profileShopList;
       },
       wishLists() {
@@ -106,7 +107,6 @@ export default {
         this.$store.dispatch("updateTotalPrice");
         this.productPrice = this.$store.state.totalPrice;
       },
-
     }
 }
 </script>

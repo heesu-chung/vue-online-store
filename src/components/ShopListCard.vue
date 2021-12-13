@@ -1,11 +1,11 @@
 <template>
     <div class="list-card">
-      <input type="checkbox" class="check-box" name="" id="">
+      <input type="checkbox" class="check-box" name="" id="uid" :value="1" v-model="arr">
       <router-link class="product" :to="{name: 'Product', params: {productId: this.shopList.productId }}">
         <img :src="shopList.productPhoto" alt="">
         <div class="product-name" >{{this.shopList.productName}}</div>
       </router-link>
-      <div class="wish">heart</div>
+      <div class="wish"></div>
       <div class="quantity-wrap">
         <h5 class="quantity">{{this.shopList.productQuantity}}개</h5>
         <button class="change">변경</button>
@@ -34,9 +34,10 @@ export default {
     data() {
       return {
         currentProduct: null,
+        arr: [],
       }
     },
-    async mounted() {
+    async created() {
       // console.log(`ShopListCard.vue mounted`);
       this.$store.dispatch('getPost');
       this.currentProduct = await this.$store.state.shopPosts.filter((post) => {
@@ -55,6 +56,11 @@ export default {
         this.$store.dispatch("deleteList", this.shopList.productId);
       }
     },
+    watch : {
+      arr() {
+        console.log(this.arr);
+      }
+    },
 }
 </script>
 
@@ -65,6 +71,9 @@ export default {
   font-weight: 400;
 }
 
+input[type="checkbox"] {
+  zoom: 1.25;
+}
 button {
   width: 45px;
   height: 30px;

@@ -53,7 +53,6 @@ export default {
 *{
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 400;
-
     
 }
 .product-card {
