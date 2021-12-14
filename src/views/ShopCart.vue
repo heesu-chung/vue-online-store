@@ -6,7 +6,7 @@
     </div>
     
     <div class="category">
-      <input type="checkbox" class="checkbox" name="shopListCard" value="all"  id="" checked>
+      <input type="checkbox" class="checkbox" name="shopListCard" :value="all" v-model="checkAll" @change="checkedAll">
       <div class="item">item</div>
       <div class="wish">위시</div>
       <div class="quantity">수량</div>
@@ -21,7 +21,6 @@
     </div>
 
     <ShopListCard :shopList="shopList" v-for="(shopList, index) in shopLists" :key="index" :idx="index"/>
-
     <div class="overview">
       <div class="total-price">
         <h3>상품가격</h3>
@@ -35,8 +34,8 @@
 
     <div class="overall">
       <div class="options">
-        <button class="option">선택상품 삭제</button>
-        <button class="option">위시리스트 담기</button>
+        <button class="option" @click="deleteProduct" v-if="false">선택상품 삭제</button>
+        <button class="option" @click="getWishList" v-if="false">위시리스트 담기</button>
       </div>
       <div class="total-fee">
         <h4>결제금액</h4>
@@ -105,6 +104,15 @@ export default {
       computeProductPrice() {
         this.$store.dispatch("updateTotalPrice");
         this.productPrice = this.$store.state.totalPrice;
+      },
+      getWishList() {
+
+      },
+      deleteProduct() {
+
+      },
+      checkedAll() {
+        
       },
     },
     watch: {
@@ -237,7 +245,9 @@ export default {
       }
     }
     .total-fee {
-      margin-left: 50%;
+      margin-left: 69%;
+      margin-top: 15px;
+      margin-bottom: 15px;
       width: 17%;
       display: flex;
       flex-direction: row;

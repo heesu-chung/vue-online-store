@@ -14,6 +14,7 @@ const state = {
   totalPrice: null,
   deliPrice:null,
   shopLists: [],
+  checkLists: [],
   // Product Info
   user: null,
   
@@ -76,7 +77,7 @@ const mutations = {
   },
   setProfileInfo(state, doc) {
     state.profileName = doc.data().profileName;
-    state.profileEmail = doc.data().email;
+    state.profileEmail = doc.data().profileEmail;
     state.profileId = doc.data().profileId;
     state.profileShopList = doc.data().profileShopList;
     state.profileWishList = doc.data().profileWishList;
@@ -127,15 +128,20 @@ const actions = {
   },
   async updateTotalPrice({state}) {
     let finalPrice = 0;
-    state.profileShopList.forEach((post) => {
-          finalPrice += post.totalProductPrice;
+    // console.log(state.checkLists);
+    state.profileShopList.forEach((post, index) => {
+      // console.log(`check index No.` + index);
+      if(state.checkLists.indexOf(index) != -1){
+        // console.log(`index ` + index + ` found`);
+        finalPrice += post.totalProductPrice;
+      }    
     });
     if(finalPrice < 50000) state.deliPrice = 3000;
     else state.deliPrice = 0;
     state.totalPrice = finalPrice;
   },
   async deleteList({state, commit}, payload) {
-    // console.log('deleteList(actions) has been called');
+
     const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
     const result = await dataBase.get();
     

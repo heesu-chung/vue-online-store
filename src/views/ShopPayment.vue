@@ -8,22 +8,24 @@
     <div class="product-info-wrap">
       <div class="product-infos">
         <h3 class="title">주문 상품 정보</h3>
-        <router-link class="content" :to="{name: 'Product'}">
+        <!-- <router-link class="content" :to="{name: 'Product'}">
           <img src="" alt="">
           <div class="product-info">
             <h4 class="product-name">Lumio x SUPERFICTION Lito mini / Blue</h4>
             <h5 class="product-quantity">1개</h5>
             <h4 class="product-price">250,000원</h4>
           </div>
-        </router-link>
+        </router-link> -->
+
+        <PaymentListCard class="shop-list" :shopList="shopList" v-for="(shopList, idx) in shopLists" :key="idx"/>
       </div>
         <div class="orderer-infos">
           <h3 class="title">주문자 정보</h3>
           <div class="name-tel">
-            <input type="text" class="name" placeholder="Name">
+            <input type="text" class="name" placeholder="Name" v-model="getProfileName">
             <input type="text" class="contact" placeholder="Contact">
           </div>
-          <input type="text" class="email" placeholder="Email">
+          <input type="text" class="email" placeholder="Email" v-model="getProfileEmail">
         </div>
 
         <div class="order-infos">
@@ -70,13 +72,13 @@
               <h4 class="delivery-price-title">배송비</h4>
             </div>
             <div class="prices">
-              <h4 class="product-price">250,000원</h4>
-              <h4 class="delivery-price">무료</h4>
+              <h4 class="product-price">{{getProductPrice}}원</h4>
+              <h4 class="delivery-price">{{getDeliPrice}}</h4>
             </div>
           </div>
           <div class="total">
             <h4 class="total-price-title">총 결제금액(1개)</h4>
-            <h4 class="total-price">250,000원</h4>
+            <h4 class="total-price">{{getTotalPrice}}원</h4>
           </div>
         </div>
 
@@ -121,8 +123,52 @@
 </template>
 
 <script>
+import PaymentListCard from '../components/PaymentListCard.vue';
 export default {
-    name: 'ShopPayment'
+    name: 'ShopPayment',
+    data() {
+      return {
+        productPrice: null,
+        deliPrice: null,
+      }
+    },
+    components: {
+      PaymentListCard,
+    },
+    async mounted() {
+      await this.$store.dispatch('getCurrentUser');
+    },
+    computed: {
+      shopLists() {
+        return this.$store.state.profileShopList;
+      },
+      getProfileName() {
+        return this.$store.state.profileName;
+      },
+      getProfileEmail() {
+        return this.$store.state.profileEmail;
+      },
+      getTotalPrice() {
+        return (this.productPrice + this.deliPrice).toLocaleString();
+      },
+      getProductPrice() {
+        this.computeProductPrice();
+        return this.$store.state.totalPrice.toLocaleString();
+      },
+      getDeliPrice() {
+        if(this.$store.state.deliPrice === 0) {
+          return '무료';
+        }
+        return this.$store.state.deliPrice.toLocaleString() + `원`;
+      },
+    },
+    methods: {
+      computeProductPrice() {
+        this.$store.dispatch("updateTotalPrice");
+        this.productPrice = this.$store.state.totalPrice;
+      },
+    }
+
 }
 </script>
 

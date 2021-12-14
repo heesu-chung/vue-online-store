@@ -1,39 +1,22 @@
 <template>
 <div class="container-wrap">
-    <change-quantity-modal v-if="modalActive" :modalMessage="modalMessage" :idx="this.idx" :shopList="shopList" v-on:close-modal="closeModal" />
     <div class="list-card">
-      <input type="checkbox" class="check-box" :value="1" v-model="arr" @change="clickFunc">
-      <router-link class="product" :to="{name: 'Product', params: {productId: this.shopList.productId }}">
         <img src="" alt="" >
-        <div class="product-name" >{{this.shopList.productName}}</div>
-      </router-link>
-      <div class="wish">{{this.idx}}</div>
-      <div class="quantity-wrap">
-        <h5 class="quantity">{{this.shopList.productQuantity}}개</h5>
-        <button class="change" @click="changeQuantity">변경</button>
-      </div>
-      <div class="method">택배</div>
-      <div class="deli-prices">
-        <h5 class="deli-price">무료</h5>
-        <div class="question">?</div>
-      </div>
-      <h5 class="price">{{totalPrice}}원</h5>
-      <div class="btns">
-        <button class="btn">
-          <router-link class="btn-link" :to="{name:'ShopPayment'}">주문</router-link></button>
-        <button class="btn" @click="deleteList">삭제</button>
-      </div>
+        <div class="info">
+           <div class="product-name" >{{this.shopList.productName}}</div>
+           <h5 class="quantity">{{this.shopList.productQuantity}}개</h5>
+           <h5 class="price">{{totalPrice}}원</h5>
+        </div>
     </div>
     </div>
 </template>
 
 <script>
-import ChangeQuantityModal from '../components/ChangeQuantityModal.vue';
 export default {
-    name: 'ShopListCard',
+    name: 'PaymentListCard',
     props: ["shopList", "idx"],
     components: {
-      ChangeQuantityModal,
+      
     },
     data() {
       return {
