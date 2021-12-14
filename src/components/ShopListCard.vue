@@ -1,14 +1,16 @@
 <template>
+<div class="container-wrap">
+    <change-quantity-modal v-if="modalActive" :modalMessage="modalMessage" :idx="this.idx" :shopList="shopList" v-on:close-modal="closeModal" />
     <div class="list-card">
-      <input type="checkbox" class="check-box" name="" id="uid" :value="1" v-model="arr">
+      <input type="checkbox" class="check-box" :value="1" v-model="arr" @change="clickFunc">
       <router-link class="product" :to="{name: 'Product', params: {productId: this.shopList.productId }}">
-        <img :src="shopList.productPhoto" alt="">
+        <img src="" alt="" >
         <div class="product-name" >{{this.shopList.productName}}</div>
       </router-link>
-      <div class="wish"></div>
+      <div class="wish">{{this.idx}}</div>
       <div class="quantity-wrap">
         <h5 class="quantity">{{this.shopList.productQuantity}}개</h5>
-        <button class="change">변경</button>
+        <button class="change" @click="changeQuantity">변경</button>
       </div>
       <div class="method">택배</div>
       <div class="deli-prices">
@@ -22,28 +24,28 @@
         <button class="btn" @click="deleteList">삭제</button>
       </div>
     </div>
-  
-
-  
+    </div>
 </template>
 
 <script>
+import ChangeQuantityModal from '../components/ChangeQuantityModal.vue';
 export default {
     name: 'ShopListCard',
-    props: ["shopList"],
+    props: ["shopList", "idx"],
+    components: {
+      ChangeQuantityModal,
+    },
     data() {
       return {
         currentProduct: null,
         arr: [],
+        checked: false,
+        modalMessage: '수량 변경',
+        modalActive: false,
       }
     },
-    async created() {
-      // console.log(`ShopListCard.vue mounted`);
-      this.$store.dispatch('getPost');
-      this.currentProduct = await this.$store.state.shopPosts.filter((post) => {
-        return post.productId === this.$route.params.productId;
-      });
-      // console.log(`ShopListCard.vue mounted Done!`);
+    async mounted() {
+
     },
     computed: {
       totalPrice() {
@@ -52,13 +54,26 @@ export default {
     },
     methods: {
       deleteList() {
-        console.log(`delete button pushed`);
+        //console.log(`delete button pushed`);
         this.$store.dispatch("deleteList", this.shopList.productId);
+        this.$router.push({name: 'Home'});
+      },
+      clickFunc() {
+        console.log(this.idx);
+        console.log(this.shopList);
+      },
+
+      changeQuantity() {
+        this.modalActive = !this.modalActive;
+        //console.log(`modalActive : ` + this.modalActive);
+      },
+      closeModal() {
+        this.modalActive = !this.modalActive
       }
     },
     watch : {
-      arr() {
-        console.log(this.arr);
+      modalActive() {
+
       }
     },
 }
@@ -83,7 +98,8 @@ button {
   cursor: pointer;
   transition: .3s all ease;
   &:hover {
-    border: 1px solid black;
+    background-color: #000;
+    color: #fff;
   }
 }
 
@@ -159,6 +175,10 @@ button {
         .btn-link{
           text-decoration: none;
           color: #000;
+
+          &:hover {
+            color: #fff;
+          }
         }
       }
     }

@@ -15,7 +15,7 @@ export default {
       }
     },
     async mounted() {
-      this.currentPost = await this.$store.state.shopPosts.filter((post) => {
+      this.currentPost = this.$store.state.shopPosts.filter((post) => {
         return post.productId === this.$route.params.productId;
       })
       //console.log(this.$store.state.shopLists);

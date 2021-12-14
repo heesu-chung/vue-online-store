@@ -20,7 +20,7 @@
       </div-->
     </div>
 
-    <ShopListCard :shopList="shopList" v-for="(shopList, index) in shopLists" :key="index"/>
+    <ShopListCard :shopList="shopList" v-for="(shopList, index) in shopLists" :key="index" :idx="index"/>
 
     <div class="overview">
       <div class="total-price">
@@ -95,7 +95,6 @@ export default {
       },
 
       shopLists() {
-        console.log(this.$store.state.profileShopList);
         return this.$store.state.profileShopList;
       },
       wishLists() {
@@ -107,6 +106,9 @@ export default {
         this.$store.dispatch("updateTotalPrice");
         this.productPrice = this.$store.state.totalPrice;
       },
+    },
+    watch: {
+      
     }
 }
 </script>

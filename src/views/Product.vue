@@ -4,7 +4,8 @@
   <div class="container">
       <h4 class="nav">Home > SHOP > Product</h4>  
       <div class="infos">
-        <img :src="this.currentProduct[0].productPhoto" alt="product" v-if="this.currentProduct[0].productPhoto">
+        <!-- <img :src="this.currentProduct[0].productPhoto" alt="product" v-if="this.currentProduct[0].productPhoto"> -->
+        <img src="" alt="product" v-if="this.currentProduct[0].productPhoto">
         <img src="../assets/blogPhotos/coding.jpg" alt="image unavailable" v-if="!this.currentProduct[0].productPhoto">
         <div class="info">
           <div class="product-details">
@@ -235,6 +236,7 @@ export default {
           productId: this.$route.params.productId,
           productPhotoName: this.currentProduct[0].productPhotoName,
           productQuantity: this.quantity,
+          productOriginalPrice: this.currentProduct[0].productPrice,
           totalProductPrice: this.totalProductPriceWithoutToLocaleString,
           orderDone: false,
           orderDate: timestamp,
