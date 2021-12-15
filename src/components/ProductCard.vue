@@ -1,8 +1,7 @@
 <template>
   <div class="product-card">
       <router-link class="product" :to="{name: 'Product', params: {productId: this.post.productId }}">
-        <img  class="product-img" src="" alt=""/>
-        <!-- <img  class="product-img" :src="post.productPhoto" alt=""/> -->
+         <img  class="product-img" :src="post.productPhoto" alt=""/> 
         <router-link :to="{name: 'Product', params: {productId: this.post.productId}}" class="product-name">{{post.productName}}</router-link>
       </router-link>
       <h5 class="product-price">{{price}}원</h5>

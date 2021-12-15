@@ -2,9 +2,9 @@
 <div class="container-wrap">
     <change-quantity-modal v-if="modalActive" :modalMessage="modalMessage" :idx="this.idx" :shopList="shopList" v-on:close-modal="closeModal" />
     <div class="list-card">
-      <input type="checkbox" class="check-box" :value="1" v-model="arr" @change="clickFunc">
+      <input type="checkbox" class="check-box" :value="idx" v-model="$store.state.checkLists" @click="clickFunc" >
       <router-link class="product" :to="{name: 'Product', params: {productId: this.shopList.productId }}">
-        <img src="" alt="" >
+        <img :src="this.shopList.productPhoto" alt="" >
         <div class="product-name" >{{this.shopList.productName}}</div>
       </router-link>
       <div class="wish">{{this.idx}}</div>
@@ -19,8 +19,7 @@
       </div>
       <h5 class="price">{{totalPrice}}원</h5>
       <div class="btns">
-        <button class="btn">
-          <router-link class="btn-link" :to="{name:'ShopPayment'}">주문</router-link></button>
+        <button class="btn-link" @click="orderOne">주문</button>
         <button class="btn" @click="deleteList">삭제</button>
       </div>
     </div>
@@ -28,7 +27,7 @@
 </template>
 
 <script>
-import ChangeQuantityModal from '../components/ChangeQuantityModal.vue';
+import ChangeQuantityModal from './ChangeQuantityModal.vue';
 export default {
     name: 'ShopListCard',
     props: ["shopList", "idx"],
@@ -39,15 +38,15 @@ export default {
       return {
         currentProduct: null,
         arr: [],
-        checked: false,
+        checked: true,
         modalMessage: '수량 변경',
         modalActive: false,
         index: null,
       }
     },
     async mounted() {
-      //this.arr = this.$store.state.checkLists;
-      //this.index = this.idx;
+      this.currentProduct = this.$store.state.profileShopList;
+      this.$store.state.checkLists.push(this.idx);
     },
     computed: {
       totalPrice() {
@@ -56,7 +55,12 @@ export default {
     },
     methods: {
       async deleteList() {
+        this.$store.state.profileShopList.filter((post) => {
+           return post.productId !== this.shopList.productId;
+        });
+        this.currentProduct = this.$store.state.profileShopList;
         await this.$store.dispatch("deleteList", this.shopList.productId);
+        this.$router.go(0);
       },
       clickFunc() {
         this.checked = !this.checked;
@@ -68,7 +72,13 @@ export default {
           });
           this.$store.state.checkLists = arr;
         }
+        this.arr = this.$store.state.checkLists;
         this.$store.dispatch("updateTotalPrice");
+      },
+      orderOne() {
+        this.$store.state.checkLists = [];
+        this.$store.state.checkLists.push(this.idx);
+        this.$router.push({name: 'ShopPayment'});
       },
 
       changeQuantity() {
@@ -79,9 +89,8 @@ export default {
       }
     },
     watch : {
-      arr() {
-        //this.arr = this.$store.state.checkLists;
-        console.log(this.arr);
+      currentProduct() {
+        //console.log(`changed detected`);
       }
     },
 }

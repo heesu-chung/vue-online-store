@@ -11,10 +11,17 @@
 
     <div class="names">
       <div class="essential">
-        <h5>이름</h5>
+        <h5>상세정보</h5>
         <div class="circle"></div>
       </div>
       <input type="text" class="name" v-model="name" placeholder="이름을(를) 입력하세요">
+      <input type="text" class="contact" v-model="contact" placeholder="전화번호를 입력하세요">
+      <div class="find-zip-code">
+        <button class="zipcode" @click ="findAddress">{{this.zipCode}}</button>
+        <button class="btn" @click="findAddress">주소 찾기</button>
+      </div>
+      <input type="text" class="address" v-model="address" placeholder="주소">
+      <input type="text" class="address-detail" v-model="addressDetail" placeholder="상세주소">
     </div>
 
     <button class="sign-in" @click.prevent="register">가입하기</button>
@@ -34,11 +41,18 @@ export default {
         password: "",
         passwordCheck: "",
         name: "",
+        contact: '',
+        zipCode: '1111',
+        address: '',
+        addressDetail: '', 
         error: null,
         errorMsg: "",
       }
     },
     methods: {
+      findAddress() {
+
+      },
       async register() {
         if(this.email !== "" && 
         this.password !== "" &&
@@ -62,6 +76,12 @@ export default {
             profileWishList: [],
             profileCoverPhoto: null,
             profileGrade: 1,
+            profileInfo: {
+              profileContact: this.contact,
+              profileZipCode: this.zipCode,
+              profileAddress: this.address,
+              profileAddressDetail: this.addressDetail,
+            },
             isManager: false,
             profileMessage: [],
             registerDate: timestamp,
@@ -111,8 +131,43 @@ export default {
       border-bottom: 1px solid #ccc;
     }
   }
+
   .names {
     margin-bottom: 20px;
+      .contact, .address-detail {
+        border-top: none;
+      }
+      .find-zip-code {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .zipcode {
+          width: 30%;
+          border: 1px solid #ccc;
+          border-bottom: none;
+          background-color: #fff;
+          color: #aaa;
+          height: 35px;
+          cursor: pointer;
+        }
+        .btn {
+          margin-left: 10px;
+          width: 70px;
+          height: 26px;
+          border-radius: 13px;
+          font-size: 12px;
+          font-weight: 400;
+          background-color: #fff;
+          border: 1px solid #aaa;
+          cursor: pointer;
+          transition: .3s all ease;
+          &:hover {
+            background-color: #000;
+            color: #fff;
+          }
+        }
+      }
     .essential {
       display: flex;
       flex-direction: row;

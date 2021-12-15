@@ -11,7 +11,7 @@ export default {
     name: 'Description',
     data() {
       return {
-        currentPost: null,
+        currentPost: [{}],
       }
     },
     async mounted() {

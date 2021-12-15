@@ -4,12 +4,11 @@
   <div class="container">
       <h4 class="nav">Home > SHOP > Product</h4>  
       <div class="infos">
-        <!-- <img :src="this.currentProduct[0].productPhoto" alt="product" v-if="this.currentProduct[0].productPhoto"> -->
-        <img src="" alt="product" v-if="this.currentProduct[0].productPhoto">
-        <img src="../assets/blogPhotos/coding.jpg" alt="image unavailable" v-if="!this.currentProduct[0].productPhoto">
+        <img :src="currentProduct[0].productPhoto" alt="product" v-if="currentProduct[0].productPhoto"> 
+        <img src="../assets/blogPhotos/coding.jpg" alt="image unavailable" v-if="!currentProduct[0].productPhoto">
         <div class="info">
           <div class="product-details">
-                <h2 class="product-name">{{ this.currentProduct[0].productName}}</h2>
+                <h2 class="product-name">{{currentProduct[0].productName}}</h2>
                 <div class="product-specific">
                   <h3 class="price">{{ productPrice }}원</h3>
                   <div class="icon">
@@ -40,9 +39,9 @@
               <h3 class="total-price">{{ totalPrice }}원</h3>
             </div>
             <div class="btns">
-              <router-link class="buy-btn" :to="{name: 'ShopPayment'}" v-if="this.currentProduct[0].productRemainQuantity">구매하기</router-link>
-              <div class="btn" @click="shoplist" v-if="this.currentProduct[0].productRemainQuantity">장바구니</div>
-              <div class="soldout-message" v-if="!this.currentProduct[0].productRemainQuantity">
+              <router-link class="buy-btn" :to="{name: 'ShopPayment'}" v-if="currentProduct[0].productRemainQuantity">구매하기</router-link>
+              <div class="btn" @click="shoplist" v-if="currentProduct[0].productRemainQuantity">장바구니</div>
+              <div class="soldout-message" v-if="!currentProduct[0].productRemainQuantity">
                 품절된 상품입니다.
               </div>
               <button class="btn" @click="likes">하트</button>
@@ -122,13 +121,11 @@ export default {
   },
   data() {
     return {
-      currentProduct: null,
+      currentProduct: [{}],
       quantity: 1,
       deliPay: 0,
-      //productList: [],
       modalMessage: '선택하신 상품을 장바구니에 담았습니다',
       modalActive: false,
-
       isProductExistOnDB: false,
     }
   },
@@ -235,6 +232,7 @@ export default {
           productName: this.currentProduct[0].productName,
           productId: this.$route.params.productId,
           productPhotoName: this.currentProduct[0].productPhotoName,
+          productPhoto: this.currentProduct[0].productPhoto,
           productQuantity: this.quantity,
           productOriginalPrice: this.currentProduct[0].productPrice,
           totalProductPrice: this.totalProductPriceWithoutToLocaleString,

@@ -45,6 +45,7 @@ const state = {
   isManager: null,
   profileMessage: [],
   registerDate: null,
+  profileInfo: null,
 };
 
 const mutations = {
@@ -87,6 +88,7 @@ const mutations = {
     state.profileCoverPhoto = doc.data().profileCoverPhoto;
     state.profilePassword = doc.data().profilePassword;
     state.registerDate = doc.data().registerDate;
+    state.profileInfo = doc.data().profileInfo;
   },
   filterShopList(state, payload) {
     state.shopPosts = state.shopPosts.filter((post) => post.productId !== payload);
@@ -152,6 +154,7 @@ const actions = {
       profileShopList: updateShopList,
     });
     commit(`setProfileInfo`, result);
+    
   },
 
 }

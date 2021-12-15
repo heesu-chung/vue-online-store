@@ -1,11 +1,13 @@
 <template>
 <div class="container-wrap">
     <div class="list-card">
-        <img src="" alt="" >
+      <div class="product">
+        <img :src="this.shopList.productPhoto" alt="" >
         <div class="info">
            <div class="product-name" >{{this.shopList.productName}}</div>
            <h5 class="quantity">{{this.shopList.productQuantity}}개</h5>
            <h5 class="price">{{totalPrice}}원</h5>
+        </div>
         </div>
     </div>
     </div>
@@ -64,7 +66,7 @@ export default {
     watch : {
       arr() {
         //this.arr = this.$store.state.checkLists;
-        console.log(this.arr);
+        //console.log(this.arr);
       }
     },
 }
@@ -78,7 +80,7 @@ export default {
 }
 
 input[type="checkbox"] {
-  zoom: 1.25;
+  zoom: 1.0;
 }
 button {
   width: 45px;
@@ -101,9 +103,11 @@ button {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 10px 0;
+    padding: 15px 0;
     font-size: 13px;
+    background-color: #fff;
     border-bottom: 1px solid #ccc;
+    
     .check-box {
       flex: 1;
     }
@@ -115,15 +119,37 @@ button {
       align-items: center;
       cursor: pointer;
       img {
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
         margin-right: 10px;
       }
-      .product-name {
-        text-decoration: none;
-        font-weight: 400;
-        font-size: 14px;
-        color: #000;
+      .info{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        //border: 1px solid black;
+        justify-content: left;
+        .product-name {
+          text-decoration: none;
+          font-weight: 400;
+          font-size: 14px;
+          color: #000;
+          padding: 5px 0;
+        }
+        .quantity{
+          padding: 5px 0;
+          font-size: 12px;
+          color: #aaa;
+        }
+        .price {
+          padding: 5px 0;
+          font-size: 14px;
+          //border: 1px solid black;
+          text-align: left;
+          font-weight: 700;
+
+        }
       }
     }
     .wish{

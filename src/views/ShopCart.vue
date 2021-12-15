@@ -6,7 +6,7 @@
     </div>
     
     <div class="category">
-      <input type="checkbox" class="checkbox" name="shopListCard" :value="all" v-model="checkAll" @change="checkedAll">
+      <input type="checkbox" class="checkbox" name="shopListCard" value="all" v-model="arr" @change="check">
       <div class="item">item</div>
       <div class="wish">위시</div>
       <div class="quantity">수량</div>
@@ -43,7 +43,8 @@
       </div>
     </div>
     <div class="actions">
-      <router-link class="final-order" :to="{name: 'ShopPayment'}"><span>주문하기</span></router-link>
+      <router-link class="final-order" :to="{name: 'ShopPayment'}" v-if="this.$store.state.checkLists.length !== 0"><span>주문하기</span></router-link>
+      <div class="final-order-none" v-else>상품을 선택해주세요</div>
       <router-link class="continue" :to="{name: 'Shop'}">계속 쇼핑하기</router-link>
     </div>
     
@@ -71,12 +72,17 @@ export default {
     },
     data() {
       return {
+        currentProduct: null,
         productPrice: 0,
         deliPrice: 0,
+        isChecked: 0,
+        arr: [],
       }
     },
     mounted() {
       //this.$store.dispatch("getCurrentUser");
+      this.$store.state.checkLists = [];
+      this.currentProduct = this.$store.state.profileShopList;
     },
     computed: {
       getTotalPrice() {
@@ -106,17 +112,24 @@ export default {
         this.productPrice = this.$store.state.totalPrice;
       },
       getWishList() {
-
+        
       },
       deleteProduct() {
-
-      },
-      checkedAll() {
         
+      },
+      check() {
+        this.$store.state.checkLists = [];
+        if(this.arr.length) {
+          this.shopLists.forEach((post, index) => {
+            this.$store.state.checkLists.push(index);
+          });
+        } 
       },
     },
     watch: {
-      
+      currentProduct() {
+        this.currentProduct = this.$store.state.profileShopList;
+      }
     }
 }
 </script>
@@ -302,6 +315,17 @@ export default {
       &:hover {
         background-color: #4a82b3;
       }
+    }
+    .final-order-none {
+      width: 230px;
+      height: 50px;
+      font-size: 15px;
+      letter-spacing: 2px;
+      background-color: #aec6db;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .continue {
       margin-top: 20px;

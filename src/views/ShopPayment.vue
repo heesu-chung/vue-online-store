@@ -1,5 +1,6 @@
 <template>
   <div class="container-wrap">
+    <Modal v-if="modalActive" :modalMessage="modalMessage" v-on:close-modal="closeModal"/>
     <div class="container">
     <h2 class="page">결제하기</h2>
     
@@ -8,22 +9,13 @@
     <div class="product-info-wrap">
       <div class="product-infos">
         <h3 class="title">주문 상품 정보</h3>
-        <!-- <router-link class="content" :to="{name: 'Product'}">
-          <img src="" alt="">
-          <div class="product-info">
-            <h4 class="product-name">Lumio x SUPERFICTION Lito mini / Blue</h4>
-            <h5 class="product-quantity">1개</h5>
-            <h4 class="product-price">250,000원</h4>
-          </div>
-        </router-link> -->
-
         <PaymentListCard class="shop-list" :shopList="shopList" v-for="(shopList, idx) in shopLists" :key="idx"/>
       </div>
         <div class="orderer-infos">
           <h3 class="title">주문자 정보</h3>
           <div class="name-tel">
             <input type="text" class="name" placeholder="Name" v-model="getProfileName">
-            <input type="text" class="contact" placeholder="Contact">
+            <input type="text" class="contact" placeholder="Contact" v-model="contact">
           </div>
           <input type="text" class="email" placeholder="Email" v-model="getProfileEmail">
         </div>
@@ -31,33 +23,33 @@
         <div class="order-infos">
           <h3 class="title">배송 정보</h3>
           <div class="auto">
-            <input type="checkbox" class="checkbox">
+            <input type="checkbox" class="checkbox" :value="1" v-model="duplicate" @change="duplicateClick">
             <h4 class="identical">주문자 정보와 동일</h4>
           </div>
           <div class="detail-infos">
-            <input type="text" class="recipient" placeholder="수령인">
-            <input type="text" class="contact" placeholder="연락처">
+            <input type="text" class="recipient" placeholder="수령인" v-model="recipient">
+            <input type="text" class="contact" placeholder="연락처" v-model="contactAnother">
           </div>
           <div class="address-num">
             <input type="text" class="zip-code" placeholder="우편번호">
             <button class="find-zip-code">주소 찾기</button>
           </div>
-          <input type="text" class="address" placeholder="주소">
-          <input type="text" class="address-detail" placeholder="상세주소">
-          <div class="auto">
+          <input type="text" class="address" placeholder="주소" v-model="address">
+          <input type="text" class="address-detail" placeholder="상세주소" v-model="addressDetail">
+          <!-- <div class="auto">
             <input type="checkbox" class="checkbox">
             <h4 class="identical">배송지 목록에 추가</h4>
-          </div>
+          </div> -->
           <div class="memos">
             <h4 class="memo">배송메모</h4>
-            <select name="" id="" class="message">
-              <option value="">배송 메모를 선택해 주세요.</option>
-              <option value="">배송 전에 미리 연락 바랍니다.</option>
-              <option value="">부재시 경비실에 맡겨주세요.</option>
-              <option value="">부재시 전화나 문자를 남겨주세요.</option>
-              <option value="">직접 입력</option>
+            <select name="" id="" class="message" v-model="memoSelection" placeholder="배송 메모를 선택해 주세요.">
+              <option :value="1">배송 메모를 선택해 주세요.</option>
+              <option :value="2">배송 전에 미리 연락 바랍니다.</option>
+              <option :value="3">부재시 경비실에 맡겨주세요.</option>
+              <option :value="4">부재시 전화나 문자를 남겨주세요.</option>
+              <option :value="5">직접 입력</option>
             </select>
-            <input type="text" class="typing" placeholder="배송 메모를 입력해 주세요.">
+            <input type="text" class="typing" placeholder="배송 메모를 입력해 주세요." v-if="memoSelection === 5" v-model="deliveryMemo">
           </div>
         </div>
     
@@ -86,33 +78,35 @@
           <h3 class="title">결제수단</h3>
           <div class="select">
             <div class="select-item">
-              <input type="radio" name="method" id="credit-card" value="credit"><label for="credit-card">신용카드</label>
+              <input type="radio" name="method" id="credit-card" value="credit" v-model="paymentMethod"><label for="credit-card" >신용카드</label>
             </div>
             <div class="select-item">
-              <input type="radio" name="method" id="real-time"><label for="real-time">실시간 계좌이체</label>
+              <input type="radio" name="method" id="real-time" value="realtime" v-model="paymentMethod"><label for="real-time">실시간 계좌이체</label>
             </div>
             <div class="select-item">
-              <input type="radio" name="method" id="virtual"><label for="virtual">가상계좌</label>
+              <input type="radio" name="method" id="virtual" value="virtual" v-model="paymentMethod"><label for="virtual">가상계좌</label>
             </div>
             <div class="select-item">
-              <input type="radio" name="method" id="none"><label for="none">무통장입금</label>
+              <input type="radio" name="method" id="none" value="no-bankbook" v-model="paymentMethod"><label for="none">무통장입금</label>
             </div>
-            
           </div>
         </div>
 
         <div class="agreement">
           <div class="agree-all">
-            <input type="checkbox" name="all" id="">
+            <input type="checkbox" name="all" id="" :value="1" v-model="agreeCheck" @change="checkAgree">
             <h4 class="agree-all-text">전체 동의</h4>
           </div>
           <div class="agree">
             <h4>ㄴ</h4>
-            <input type="checkbox" name="" id="">
+            <input type="checkbox" name="" id="" :value="2" v-model="agreeCheck" >
             <h4 class="agree-text">구매조건 확인 및 결제진행에 동의</h4>
           </div>
         </div>
-        <button class="payment-check">
+        <div class="payment-check" v-if="agreeCheck.length !== 2">
+            결제하기
+        </div>
+        <button class="payment-check-allowed" v-if="agreeCheck.length === 2" @click="paymentPrecedure">
             결제하기
         </button>
     </div>
@@ -124,23 +118,43 @@
 
 <script>
 import PaymentListCard from '../components/PaymentListCard.vue';
+import Modal from '../components/Modal.vue';
+
+
 export default {
     name: 'ShopPayment',
     data() {
       return {
         productPrice: null,
         deliPrice: null,
+        duplicate: [],
+        recipient: '',
+        contact: '',
+        contactAnother: '',
+        address: '',
+        addressDetail: '',
+        memoSelection: 1,
+        deliveryMemo: '',
+        agreeCheck: [],
+        paymentMethod: '',
+
+        modalActive: false,
+        modalMessage: '',
       }
     },
     components: {
-      PaymentListCard,
+      PaymentListCard, Modal
     },
     async mounted() {
       await this.$store.dispatch('getCurrentUser');
     },
     computed: {
       shopLists() {
-        return this.$store.state.profileShopList;
+        const checkListsArr = this.$store.state.checkLists;
+        const buyShopList = this.$store.state.profileShopList.filter((post, index) => {
+          return checkListsArr.indexOf(index) !== -1;
+        });
+        return buyShopList;
       },
       getProfileName() {
         return this.$store.state.profileName;
@@ -149,7 +163,7 @@ export default {
         return this.$store.state.profileEmail;
       },
       getTotalPrice() {
-        return (this.productPrice + this.deliPrice).toLocaleString();
+        return (this.productPrice + this.$store.state.deliPrice).toLocaleString();
       },
       getProductPrice() {
         this.computeProductPrice();
@@ -167,6 +181,37 @@ export default {
         this.$store.dispatch("updateTotalPrice");
         this.productPrice = this.$store.state.totalPrice;
       },
+      duplicateClick() {
+        if(this.duplicate.length){
+          this.recipient = this.$store.state.profileName;
+          this.contactAnother = this.contact;
+        } else {
+          this.recipient = '';
+          this.contactAnother = '';
+        }
+      },
+      checkAgree() {
+        if(this.agreeCheck.indexOf(1) !== -1)
+          this.agreeCheck = [1, 2];
+      },
+      paymentPrecedure() {
+        if(!this.recipient ||
+          !this.contact ||
+          !this.address ||
+          !this.addressDetail ||
+          this.agreeCheck.length !== 2 ||
+          !this.paymentMethod) {
+            this.modalActive = true;
+            this.modalMessage = '빈칸을 채워주세요!';
+
+          } else {
+            this.modalActive = true;
+            this.modalMessage = '이대로 진행하시겠습니까?'
+          }
+      },
+      closeModal() {
+        this.modalActive = !this.modalActive;
+      }
     }
 
 }
@@ -180,7 +225,7 @@ export default {
 .title {
             font-size: 15px;
             font-weight: 700;
-            padding-bottom: 20px;  
+            padding-bottom: 10px;  
 }
 
 input {
@@ -273,7 +318,7 @@ input {
           margin-bottom: 20px;
           background-color: #fff;
           padding: 20px 20px;
-
+          
           .auto {
             display: flex;
             flex-direction: row;
@@ -285,7 +330,8 @@ input {
             .identical {
               font-size: 13px;
               padding-left: 10px;
-              margin-top: 6px;
+              margin-top: 10px;
+
             }
           }
           .detail-infos {
@@ -312,6 +358,7 @@ input {
             width: 100%;
           }
           .memos {
+            margin-top: 10px;
             .memo { 
               font-size: 14px;
               padding-bottom: 15px;
@@ -320,6 +367,9 @@ input {
               width: 100%;
               height: 35px;
               margin-bottom: 10px;
+            }
+            .typing {
+              width: 100%;
             }
           }
         }
@@ -403,7 +453,8 @@ input {
 
         .agreement {
           background-color: #fff;
-          padding: 20px 20px;
+          padding: 0px 20px;
+          
           font-size: 14px;
           .agree-all, .agree {
             display: flex;
@@ -415,27 +466,38 @@ input {
             color: #111;
           }
           h4 {
-            padding-top: 7px;
+            padding-top: 10px;
           }
           .agree {
-            margin-left: 25px;
+            
           }
         }
 
-        .payment-check {
+        .payment-check-allowed, .payment-check {
           width: 100%;
           height: 50px;
           font-size: 16px;
           font-weight: 700;
           letter-spacing: 2px;
-          background-color: #7ba3c5;
+          
           color: #fff;
-          cursor: pointer;
+          
           border: none;
+          
+        }
+        .payment-check-allowed {
+          background-color: #7ba3c5;
+          cursor: pointer;
           transition: .3s all ease;
           &:hover {
             background-color: #4a82b3;
           }
+        }
+        .payment-check {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: #bdd1e2;
         }
       }
     }
