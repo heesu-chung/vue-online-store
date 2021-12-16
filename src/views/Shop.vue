@@ -4,42 +4,67 @@
     <!-- :post v-for :key -->
     <div class="product-cards-wrap">
       <div class="product-cards">
-        <ProductCard :post="post" v-for="(post, index) in shopPosts" :key="index"/>
+        <ProductCard :post="post" v-for="(post, index) in shopPosts" :key="index" :idx="index"/>
       </div>
     </div>
-    <div class="page">
-      <h3> O </h3>
-      <ul>
-        <li></li>
-      </ul>
-      <h3> O </h3>
+    <div class="page-wrap">
+        <Page class="page-num" v-for="(num, idx) in pageNumbers" :key="idx" :page="num" :currentPage="currentPage" :value="idx" />
     </div>
   </div>
 </template>
 
 <script>
+import Page from '../components/Page.vue';
 import ProductCard from '../components/ProductCard.vue';
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+
 export default {
     name: 'Shop',
+    data() {
+      return {
+        currentPage: 1,
+        showPostNum: 8,
+      }
+    },
     components: {
-      ProductCard,
+      ProductCard, Page
     },
     created() {
        this.$store.dispatch('getPost');
        firebase.auth().onAuthStateChanged((user) => {
         this.$store.commit("updateUser", user);
       });
+
+    },
+    async mounted() {
+      this.currentPage = this.$route.params.page;
     },
     computed: {
+      pageNumbers() {
+        const num = this.$store.state.shopPosts.length;
+        return this.calculatePageNum(num);
+      },
       sampleProducts() {
         return this.$store.state.sampleProducts;
       },
       shopPosts() {
-        //console.log(this.$store.state.shopPosts);
-        return this.$store.state.shopPosts;
+        const page = (this.$route.params.page-1)*this.showPostNum;
+        const postForPage = this.$store.state.shopPosts.slice(page,page+this.showPostNum);
+        return postForPage;
       },
+    },
+    methods: {
+      calculatePageNum(num) {
+        if(num % this.showPostNum === 0) {
+          return parseInt(num / this.showPostNum);
+        } else {
+          return parseInt(num / this.showPostNum + 1);
+        }
+      },
+      goToPageNum(){
+        
+      }
     }
 }
 </script>
@@ -77,7 +102,8 @@ export default {
       }
     }
   }
-  .page {
+  .page-wrap {
+  
     display: flex;
     flex-direction: row; 
     margin: 0 auto;
@@ -87,9 +113,13 @@ export default {
     padding: 20px 0;
     padding-top: 50px;
     h3{
-      cursor: pointer;
+      
       padding: 0 5px;
     }
+    .page-num {
+      padding: 0 10px;
+    }
+
   }
 }
 </style>

@@ -11,7 +11,9 @@ import MyPage from '../views/MyPage.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import SiteJoinAgreement from '../views/SiteJoinAgreement.vue';
+import OrderDone from '../views/OrderDone.vue';
 import ProductEditor from '../views/ProductEditor.vue'; 
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -21,7 +23,7 @@ const routes = [
         component: Home,
     },
     {
-        path: "/shop",
+        path: "/shop/:page",
         name: "Shop",
         component: Shop,
     },
@@ -70,7 +72,11 @@ const routes = [
         name: "SiteJoinAgreement",
         component: SiteJoinAgreement,
     },
-    
+    {
+        path: "/order-done",
+        name: "OrderDone",
+        component: OrderDone,
+    },
     {
         path: "/product-editor",
         name: "ProductEditor",

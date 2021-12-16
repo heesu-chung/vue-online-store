@@ -1,6 +1,6 @@
 <template>
   <div class="container-wrap">
-    <Modal v-if="modalActive" :modalMessage="modalMessage" v-on:close-modal="closeModal"/>
+    <Modal v-if="modalActive" :modalMessage="modalMessage" v-on:close-modal="closeModal" :modalResponse="modalResponse"/>
     <div class="container">
     <h2 class="page">결제하기</h2>
     
@@ -15,7 +15,7 @@
           <h3 class="title">주문자 정보</h3>
           <div class="name-tel">
             <input type="text" class="name" placeholder="Name" v-model="getProfileName">
-            <input type="text" class="contact" placeholder="Contact" v-model="contact">
+            <input type="text" class="contact" placeholder="Contact" v-model="getProfileContact">
           </div>
           <input type="text" class="email" placeholder="Email" v-model="getProfileEmail">
         </div>
@@ -28,10 +28,10 @@
           </div>
           <div class="detail-infos">
             <input type="text" class="recipient" placeholder="수령인" v-model="recipient">
-            <input type="text" class="contact" placeholder="연락처" v-model="contactAnother">
+            <input type="text" class="contact" placeholder="연락처" v-model="contact">
           </div>
           <div class="address-num">
-            <input type="text" class="zip-code" placeholder="우편번호">
+            <input type="text" class="zip-code" placeholder="우편번호" v-model="zipCode">
             <button class="find-zip-code">주소 찾기</button>
           </div>
           <input type="text" class="address" placeholder="주소" v-model="address">
@@ -131,6 +131,7 @@ export default {
         recipient: '',
         contact: '',
         contactAnother: '',
+        zipCode: '',
         address: '',
         addressDetail: '',
         memoSelection: 1,
@@ -140,6 +141,7 @@ export default {
 
         modalActive: false,
         modalMessage: '',
+        modalResponse: null,
       }
     },
     components: {
@@ -162,6 +164,9 @@ export default {
       getProfileEmail() {
         return this.$store.state.profileEmail;
       },
+      getProfileContact() {
+        return this.$store.state.profileInfo.profileContact;
+      },
       getTotalPrice() {
         return (this.productPrice + this.$store.state.deliPrice).toLocaleString();
       },
@@ -175,6 +180,7 @@ export default {
         }
         return this.$store.state.deliPrice.toLocaleString() + `원`;
       },
+      
     },
     methods: {
       computeProductPrice() {
@@ -185,9 +191,17 @@ export default {
         if(this.duplicate.length){
           this.recipient = this.$store.state.profileName;
           this.contactAnother = this.contact;
+          this.address = this.$store.state.profileInfo.profileAddress;
+          this.addressDetail = this.$store.state.profileInfo.profileAddressDetail;
+          this.contact = this.$store.state.profileInfo.profileContact;
+          this.zipCode = this.$store.state.profileInfo.profileZipCode;
         } else {
           this.recipient = '';
           this.contactAnother = '';
+          this.address = '';
+          this.addressDetail = '';
+          this.contact = '';
+          this.zipCode = '';
         }
       },
       checkAgree() {
@@ -207,6 +221,7 @@ export default {
           } else {
             this.modalActive = true;
             this.modalMessage = '이대로 진행하시겠습니까?'
+            this.modalResponse = {name:'OrderDone'};
           }
       },
       closeModal() {

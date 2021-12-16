@@ -14,16 +14,14 @@
 <script>
 export default {
     name: 'ProductCard',
-    props: ["post"],
+    props: ["post", "idx"],
     data() {
         return {
             productNum: null,
         }
     },
     async mounted() {
-        // console.log(`Product.vue mounted`);
         await this.getProductNum();
-        // console.log(`Product.vue mounted Done!`);
     },
     computed: {
         price() {

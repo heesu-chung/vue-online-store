@@ -15,7 +15,7 @@
 // import db from "../firebase/firebaseInit";
 export default {
     name: 'Modal',
-    props: ["modalMessage"],
+    props: ["modalMessage", "modalResponse"],
     data() {
         return {
             quantity: 1,
@@ -26,6 +26,10 @@ export default {
     },
     methods: {
         closeModal() {
+            if(this.modalResponse) {
+                this.$emit("close-modal");
+                this.$router.push(this.modalResponse);
+            }
             this.$emit("close-modal");
         },
     },

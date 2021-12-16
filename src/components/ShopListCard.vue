@@ -38,7 +38,7 @@ export default {
       return {
         currentProduct: null,
         arr: [],
-        checked: true,
+        checked: false,
         modalMessage: '수량 변경',
         modalActive: false,
         index: null,
@@ -46,7 +46,7 @@ export default {
     },
     async mounted() {
       this.currentProduct = this.$store.state.profileShopList;
-      this.$store.state.checkLists.push(this.idx);
+      //this.$store.state.checkLists.push(this.idx);
     },
     computed: {
       totalPrice() {
