@@ -219,6 +219,8 @@ export default {
             this.modalMessage = '빈칸을 채워주세요!';
 
           } else {
+            this.$store.state.paymentMethod = this.paymentMethod;
+            this.$store.state.paymentTotalPrice = this.productPrice + this.$store.state.deliPrice;
             this.modalActive = true;
             this.modalMessage = '이대로 진행하시겠습니까?'
             this.modalResponse = {name:'OrderDone'};

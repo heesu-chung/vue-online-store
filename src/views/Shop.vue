@@ -8,7 +8,9 @@
       </div>
     </div>
     <div class="page-wrap">
+        
         <Page class="page-num" v-for="(num, idx) in pageNumbers" :key="idx" :page="num" :currentPage="currentPage" :value="idx" />
+
     </div>
   </div>
 </template>
@@ -39,6 +41,7 @@ export default {
     },
     async mounted() {
       this.currentPage = this.$route.params.page;
+      //console.log(this.$route.params.page);
     },
     computed: {
       pageNumbers() {

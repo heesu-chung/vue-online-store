@@ -46,6 +46,9 @@ const state = {
   profileMessage: [],
   registerDate: null,
   profileInfo: null,
+
+  paymentMethod: null,
+  paymentTotalPrice: null,
 };
 
 const mutations = {

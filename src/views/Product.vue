@@ -121,33 +121,36 @@ export default {
   },
   data() {
     return {
-      currentProduct: [{}],
+      currentProduct: [{
+        //productPrice: 0,
+      }],
       quantity: 1,
       deliPay: 0,
       modalMessage: '선택하신 상품을 장바구니에 담았습니다',
       modalActive: false,
       isProductExistOnDB: false,
+      productPriceValue: 0,
+      totalProductPriceValue: 0,
+      totalPriceValue: 0,
     }
   },
   async created() {
     this.$store.dispatch("getCurrentUser");
-    this.currentProduct = await this.$store.state.shopPosts.filter((post) => {
+    this.currentProduct = this.$store.state.shopPosts.filter((post) => {
       return post.productId === this.$route.params.productId;
     });
   },
+  async mounted() {
+  },
   computed: {
     productPrice() {
-      let finalPrice = this.currentProduct[0].productPrice.toLocaleString();
-      return finalPrice;
+      return this.getProductPrice().toLocaleString();
     },
     totalProductPrice() {
-      let finalPrice = (this.currentProduct[0].productPrice * this.quantity);
-      return finalPrice.toLocaleString();
+      return this.getTotalProductPrice().toLocaleString();
     },
     totalPrice() {
-      let finalPrice = (this.currentProduct[0].productPrice * this.quantity) + this.deliPay;
-      finalPrice = finalPrice.toLocaleString();
-      return finalPrice;
+      return this.getTotalPrice().toLocaleString();
     },
     totalProductPriceWithoutToLocaleString() {
       return this.currentProduct[0].productPrice * this.quantity;
@@ -178,6 +181,18 @@ export default {
       if(finalPrice > 50000) this.deliPay = 0;
       else this.deliPay = 3000;
       //console.log("deliPay is " + this.deliPay)
+    },
+    getProductPrice() {
+      this.productPriceValue = this.currentProduct[0].productPrice;
+      return this.productPriceValue;
+    },
+    getTotalProductPrice() {
+      this.totalProductPriceValue = (this.currentProduct[0].productPrice * this.quantity);
+      return this.totalProductPriceValue;
+    },
+    getTotalPrice() {
+      this.totalPriceValue = (this.currentProduct[0].productPrice * this.quantity) + this.deliPay;
+      return this.totalPriceValue;
     },
 
     async likes() {

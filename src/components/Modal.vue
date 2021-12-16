@@ -28,6 +28,10 @@ export default {
         closeModal() {
             if(this.modalResponse) {
                 this.$emit("close-modal");
+                this.$store.state.shopLists.filter((post, index) => {
+                    return this.$store.state.checkLists.indexOf(index) === -1;
+                });
+                
                 this.$router.push(this.modalResponse);
             }
             this.$emit("close-modal");
