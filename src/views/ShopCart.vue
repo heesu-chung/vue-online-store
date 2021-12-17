@@ -4,7 +4,6 @@
       <h2 class="shop-list">장바구니</h2>
       <h4 class="shop-list-quantity">2</h4>
     </div>
-    
     <div class="category">
       <input type="checkbox" class="checkbox" name="shopListCard" value="all" v-model="arr" @change="check">
       <div class="item">item</div>
@@ -81,7 +80,8 @@ export default {
     },
     async mounted() {
       //this.$store.dispatch("getCurrentUser");
-      this.$store.state.checkLists = [];
+      this.arr.push('all');
+      this.check();
       this.currentProduct = this.$store.state.profileShopList;
       await this.$store.dispatch('getCurrentUser');
     },

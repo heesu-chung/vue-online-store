@@ -109,6 +109,7 @@ const mutations = {
     state.profilePassword = doc.data().profilePassword;
     state.registerDate = doc.data().registerDate;
     state.profileInfo = doc.data().profileInfo;
+    state.profileOrderList = doc.data().profileOrderList;
   },
   filterShopList(state, payload) {
     state.shopPosts = state.shopPosts.filter((post) => post.productId !== payload);

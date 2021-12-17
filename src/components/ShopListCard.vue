@@ -63,10 +63,11 @@ export default {
         this.$router.go(0);
       },
       clickFunc() {
-        this.checked = !this.checked;
-        if(this.checked) {
+        if(this.$store.state.checkLists.indexOf(this.idx) === -1) {
+          this.checked = true;
           this.$store.state.checkLists.push(this.idx);
         } else {
+          this.checked = false;
           const arr = this.$store.state.checkLists.filter((post) => {
             return post !== this.idx;
           });

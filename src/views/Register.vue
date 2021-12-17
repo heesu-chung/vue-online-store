@@ -85,6 +85,7 @@ export default {
             isManager: false,
             profileMessage: [],
             registerDate: timestamp,
+            profileOrderList: [],
           });
           this.$router.push({name: 'Home'});
           return;

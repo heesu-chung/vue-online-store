@@ -11,7 +11,7 @@
 
 <script>
 // import "firebase/compat/storage";
-//import firebase from "firebase/compat/app";
+import firebase from "firebase/compat/app";
 import db from "../firebase/firebaseInit";
 export default {
     name: 'Modal',
@@ -40,23 +40,40 @@ export default {
             const shopLists = this.$store.state.profileShopList.filter((post, index) => {
                 return this.$store.state.checkLists.indexOf(index) !== -1;
             });
+
+            const orderProfileInfo = {
+                orderProfileId: this.$store.state.profileId,
+                orderProfileName: this.$store.state.profileName,
+                orderProfileContact: profileInfo.profileContact,
+                orderProfileAddress: profileInfo.profileAddress,
+                orderProfileAddressDetail: profileInfo.profileAddressDetail, 
+            };
+            const orderProductInfo = {
+                orderMemo: this.deliveryMemo,
+                orderTotalPrice: this.$store.state.totalPrice,
+                orderDate: timestamp,
+                orderLists: shopLists,
+            }
+
             await dataBase.set({
-                orderProfileInfo: {
-                    orderProfileId: this.$store.state.profileId,
-                    orderProfileName: this.$store.state.profileName,
-                    orderProfileContact: profileInfo.profileContact,
-                    orderProfileAddress: profileInfo.profileAddress,
-                    orderProfileAddressDetail: profileInfo.profileAddressDetail,    
-                },
-                orderProductInfo: {
-                    orderMemo: this.deliveryMemo,
-                    orderTotalPrice: this.$store.state.totalPrice,
-                    orderDate: timestamp,
-                    orderLists: shopLists,
-                },
+                orderProfileInfo: orderProfileInfo,
+                orderProductInfo: orderProductInfo,
                 deliveryDone: null,
                 deliveryDate: null,
             });
+
+            const userDataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
+            const renewOrderList = this.$store.state.profileOrderList;
+            const orderInfo = {
+                orderProfileInfo,
+                orderProductInfo,
+            };
+            renewOrderList.push(orderInfo);
+
+            await userDataBase.update({
+                profileOrderList: renewOrderList,
+            })
+
             
             this.removeOrderProducts();
 
@@ -67,7 +84,9 @@ export default {
             });
             this.$store.state.profileShopList = removedShopList;
             this.$store.dispatch('removeList');
-        }
+        },
+        async profileOrder() {
+        },
     },
 }
 </script>
