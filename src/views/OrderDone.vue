@@ -70,8 +70,6 @@ export default {
       this.memo = '';
       this.totalPrice = this.$store.state.paymentTotalPrice.toLocaleString();
       this.paymentMethod = this.$store.state.paymentMethod;
-      console.log(this.$store.state.shopLists);
-      console.log(this.$store.state.checkLists);
     },
     computed: {
       shopLists() {

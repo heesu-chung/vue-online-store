@@ -20,6 +20,10 @@
 export default {
     name: 'Home',
     components: {
+    },
+    async created() {
+      await this.$store.dispatch('getCurrentUser'); 
+      await this.$store.dispatch('getPost');
     }
 }
 </script>

@@ -96,7 +96,6 @@ export default {
                 if(this.file) {
                     const storageRef = firebase.storage().ref();
                     const docRef = storageRef.child(`documents/ProductPhotos/${this.$store.state.productPhotoName}`);
-                    console.log(storageRef, docRef);
                     docRef.put(this.file).on("state_changed", (snapshot) => {
                         console.log(snapshot);
                     }, (err) => {

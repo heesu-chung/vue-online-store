@@ -79,10 +79,11 @@ export default {
         arr: [],
       }
     },
-    mounted() {
+    async mounted() {
       //this.$store.dispatch("getCurrentUser");
       this.$store.state.checkLists = [];
       this.currentProduct = this.$store.state.profileShopList;
+      await this.$store.dispatch('getCurrentUser');
     },
     computed: {
       getTotalPrice() {

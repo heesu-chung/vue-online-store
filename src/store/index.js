@@ -47,8 +47,25 @@ const state = {
   registerDate: null,
   profileInfo: null,
 
+  profileOrderList: [],
+
   paymentMethod: null,
   paymentTotalPrice: null,
+
+  // Order
+  orderProfileInfo: null,
+  orderProfileId: null,
+  orderProfileName: null,
+  orderProfileContact: null,
+  orderProfileAddress: null,
+  orderProfileAddressDetail: null,
+  orderMemo: null,
+  orderLists: [],
+  orderTotalPrice: null,
+  orderMethod: null,
+  orderDate: null,
+  deliveryDone: null,
+  deliveryDate: null,  
 };
 
 const mutations = {
@@ -159,6 +176,14 @@ const actions = {
     commit(`setProfileInfo`, result);
     
   },
+  async removeList({state, commit}) {
+    const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
+    const result = await dataBase.get();
+    await dataBase.update({
+      profileShopList: state.profileShopList,
+    });
+    commit(`setProfileInfo`, result);
+  }
 
 }
 export default new Vuex.Store({

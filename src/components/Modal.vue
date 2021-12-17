@@ -11,11 +11,11 @@
 
 <script>
 // import "firebase/compat/storage";
-// import firebase from "firebase/compat/app";
-// import db from "../firebase/firebaseInit";
+//import firebase from "firebase/compat/app";
+import db from "../firebase/firebaseInit";
 export default {
     name: 'Modal',
-    props: ["modalMessage", "modalResponse"],
+    props: ["modalMessage", "modalResponse", "deliveryMemo"],
     data() {
         return {
             quantity: 1,
@@ -28,14 +28,46 @@ export default {
         closeModal() {
             if(this.modalResponse) {
                 this.$emit("close-modal");
-                this.$store.state.shopLists.filter((post, index) => {
-                    return this.$store.state.checkLists.indexOf(index) === -1;
-                });
-                
+                this.order();
                 this.$router.push(this.modalResponse);
             }
             this.$emit("close-modal");
         },
+        async order() {
+            const dataBase = db.collection('orders').doc();
+            const timestamp = await Date.now();
+            const profileInfo = this.$store.state.profileInfo;
+            const shopLists = this.$store.state.profileShopList.filter((post, index) => {
+                return this.$store.state.checkLists.indexOf(index) !== -1;
+            });
+            await dataBase.set({
+                orderProfileInfo: {
+                    orderProfileId: this.$store.state.profileId,
+                    orderProfileName: this.$store.state.profileName,
+                    orderProfileContact: profileInfo.profileContact,
+                    orderProfileAddress: profileInfo.profileAddress,
+                    orderProfileAddressDetail: profileInfo.profileAddressDetail,    
+                },
+                orderProductInfo: {
+                    orderMemo: this.deliveryMemo,
+                    orderTotalPrice: this.$store.state.totalPrice,
+                    orderDate: timestamp,
+                    orderLists: shopLists,
+                },
+                deliveryDone: null,
+                deliveryDate: null,
+            });
+            
+            this.removeOrderProducts();
+
+        },
+        async removeOrderProducts() {
+            const removedShopList = this.$store.state.profileShopList.filter((post,index) => {
+                return this.$store.state.checkLists.indexOf(index) === -1; 
+            });
+            this.$store.state.profileShopList = removedShopList;
+            this.$store.dispatch('removeList');
+        }
     },
 }
 </script>

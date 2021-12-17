@@ -1,6 +1,6 @@
 <template>
   <div class="container-wrap">
-    <Modal v-if="modalActive" :modalMessage="modalMessage" v-on:close-modal="closeModal" :modalResponse="modalResponse"/>
+    <Modal v-if="modalActive" :modalMessage="modalMessage" v-on:close-modal="closeModal" :deliveryMemo="deliveryMemo" :modalResponse="modalResponse"/>
     <div class="container">
     <h2 class="page">결제하기</h2>
     
