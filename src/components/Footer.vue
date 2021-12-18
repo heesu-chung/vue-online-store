@@ -18,7 +18,7 @@
           </div>
           <div class="nav-links">
               <ul class="links">
-                <router-link class="link" :to="{name: 'Shop', params: { page: 1 }}">SHOP</router-link>
+                <router-link class="link" :to="{name: 'Shop', params: { page: shopPage }}">SHOP</router-link>
                 <router-link class="link" :to="{name: 'About'}">ABOUT</router-link>
                 <router-link class="link" :to="{name: 'Contact'}">CONTACT</router-link>
               </ul>
@@ -39,7 +39,11 @@
 <script>
 export default {
     name: 'Footer',
-
+    data() {
+        return {
+            shopPage: 1,
+        }
+    }
 }
 </script>
 

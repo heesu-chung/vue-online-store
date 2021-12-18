@@ -1,23 +1,23 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import db from "../firebase/firebaseInit";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import db from '../firebase/firebaseInit';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const state = {
   // Shop Posts
   shopPosts: [],
   postLoaded: null,
   totalPrice: null,
-  deliPrice:null,
+  deliPrice: null,
   shopLists: [],
   checkLists: [],
   // Product Info
   user: null,
-  
+
   productName: null,
   productId: null,
   productPrice: null,
@@ -27,7 +27,7 @@ const state = {
   productPhoto: null,
   productPhotoName: null,
   productPhotoURL: null,
-
+  uid: null,
   productUpdateDate: null,
   productHTML: null,
 
@@ -65,7 +65,7 @@ const state = {
   orderMethod: null,
   orderDate: null,
   deliveryDone: null,
-  deliveryDate: null,  
+  deliveryDate: null,
 };
 
 const mutations = {
@@ -112,22 +112,27 @@ const mutations = {
     state.profileOrderList = doc.data().profileOrderList;
   },
   filterShopList(state, payload) {
-    state.shopPosts = state.shopPosts.filter((post) => post.productId !== payload);
+    state.shopPosts = state.shopPosts.filter(
+      post => post.productId !== payload,
+    );
   },
-}
+};
 
 const actions = {
-  async getCurrentUser({commit}) {
-    const dataBase = await db.collection('users').doc(firebase.auth().currentUser.uid);
+  async getCurrentUser({ commit }) {
+    const dataBase = await db
+      .collection('users')
+      .doc(firebase.auth().currentUser.uid);
     const dbResults = await dataBase.get();
-    commit("setProfileInfo", dbResults);
+    commit('setProfileInfo', dbResults);
   },
 
   async getPost({ state }) {
-    // console.log(`getPost(actions) has been called`);
-    const dataBase = await db.collection('shopPosts').orderBy('productUpdateDate', 'desc');
+    const dataBase = await db
+      .collection('shopPosts')
+      .orderBy('productUpdateDate', 'desc');
     const dbResults = await dataBase.get();
-    dbResults.forEach((doc) => {
+    dbResults.forEach(doc => {
       if (!state.shopPosts.some(post => post.productId === doc.id)) {
         const data = {
           productId: doc.data().productId,
@@ -140,57 +145,78 @@ const actions = {
           productPhotoName: doc.data().productPhotoName,
           productUpdateDate: doc.data().productUpdateDate,
           productHTML: doc.data().productHTML,
-        };  
+        };
         state.shopPosts.push(data);
       }
     });
     state.postLoaded = true;
   },
-  async updateUserShopList() {
-    
-  },
-  async updateTotalPrice({state}) {
+  async updateUserShopList() {},
+  async updateTotalPrice({ state }) {
     let finalPrice = 0;
-    // console.log(state.checkLists);
     state.profileShopList.forEach((post, index) => {
-      // console.log(`check index No.` + index);
-      if(state.checkLists.indexOf(index) != -1){
-        // console.log(`index ` + index + ` found`);
+      if (state.checkLists.indexOf(index) != -1) {
         finalPrice += post.totalProductPrice;
-      }    
+      }
     });
-    if(finalPrice < 50000) state.deliPrice = 3000;
+    if (finalPrice < 50000) state.deliPrice = 3000;
     else state.deliPrice = 0;
     state.totalPrice = finalPrice;
   },
-  async deleteList({state, commit}, payload) {
-
-    const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
+  async deleteList({ state, commit }, payload) {
+    const dataBase = db
+      .collection('users')
+      .doc(firebase.auth().currentUser.uid);
     const result = await dataBase.get();
-    
-    const updateShopList = state.profileShopList.filter((post) => {
+
+    const updateShopList = state.profileShopList.filter(post => {
       return post.productId !== payload;
     });
     await dataBase.update({
       profileShopList: updateShopList,
     });
     commit(`setProfileInfo`, result);
-    
   },
-  async removeList({state, commit}) {
-    const dataBase = db.collection("users").doc(firebase.auth().currentUser.uid);
+  async removeList({ state, commit }) {
+    const dataBase = db
+      .collection('users')
+      .doc(firebase.auth().currentUser.uid);
     const result = await dataBase.get();
     await dataBase.update({
       profileShopList: state.profileShopList,
     });
     commit(`setProfileInfo`, result);
-  }
+  },
 
-}
+  async likes({ state, commit, dispatch }, payload) {
+    const dataBase = db
+      .collection('users')
+      .doc(firebase.auth().currentUser.uid);
+
+    let newWishList = state.profileWishList;
+
+    if (payload.userWish) {
+      newWishList.push(payload);
+    } else if (!payload.userWish) {
+      newWishList = state.profileWishList.filter(post => {
+        return post.productId !== payload.productId;
+      });
+    } else {
+      return;
+    }
+    state.profileWishList = newWishList;
+
+    await dataBase.update({
+      profileWishList: state.profileWishList,
+    });
+    const result = await dataBase.get();
+    commit(`setProfileInfo`, result);
+    dispatch(`getPost`);
+  },
+};
 export default new Vuex.Store({
   state,
   mutations,
   actions,
-  modules: {
-  },
-})
+  modules: {},
+});

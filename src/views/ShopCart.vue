@@ -5,7 +5,14 @@
       <h4 class="shop-list-quantity">2</h4>
     </div>
     <div class="category">
-      <input type="checkbox" class="checkbox" name="shopListCard" value="all" v-model="arr" @change="check">
+      <input
+        type="checkbox"
+        class="checkbox"
+        name="shopListCard"
+        value="all"
+        v-model="arr"
+        @change="check"
+      />
       <div class="item">item</div>
       <div class="wish">위시</div>
       <div class="quantity">수량</div>
@@ -18,43 +25,69 @@
         <button class="delete">삭제</button>
       </div-->
     </div>
-
-    <ShopListCard :shopList="shopList" v-for="(shopList, index) in shopLists" :key="index" :idx="index"/>
+    <ShopListCard
+      :shopList="shopList"
+      v-for="(shopList, index) in shopLists"
+      :key="index"
+      :idx="index"
+    />
     <div class="overview">
       <div class="total-price">
         <h3>상품가격</h3>
-        <div class="price">{{getProductPrice}}원</div>
+        <div class="price">{{ getProductPrice }}원</div>
       </div>
       <div class="deli-price">
         <h3>배송비</h3>
-        <div class="price">{{getDeliPrice}}</div>
+        <div class="price">{{ getDeliPrice }}</div>
       </div>
     </div>
 
     <div class="overall">
       <div class="options">
-        <button class="option" @click="deleteProduct" v-if="false">선택상품 삭제</button>
-        <button class="option" @click="getWishList" v-if="false">위시리스트 담기</button>
+        <button class="option" @click="deleteProduct" v-if="false">
+          선택상품 삭제
+        </button>
+        <button class="option" @click="getWishList" v-if="false">
+          위시리스트 담기
+        </button>
       </div>
       <div class="total-fee">
         <h4>결제금액</h4>
-        <h2 >{{getTotalPrice}}원</h2>
+        <h2>{{ getTotalPrice }}원</h2>
       </div>
     </div>
     <div class="actions">
-      <router-link class="final-order" :to="{name: 'ShopPayment'}" v-if="this.$store.state.checkLists.length !== 0"><span>주문하기</span></router-link>
+      <router-link
+        class="final-order"
+        :to="{ name: 'ShopPayment' }"
+        v-if="this.$store.state.checkLists.length !== 0"
+        ><span>주문하기</span></router-link
+      >
       <div class="final-order-none" v-else>상품을 선택해주세요</div>
-      <router-link class="continue" :to="{name: 'Shop'}">계속 쇼핑하기</router-link>
+      <router-link
+        class="continue"
+        :to="{ name: 'Shop', params: { page: shopPage } }"
+        >계속 쇼핑하기</router-link
+      >
     </div>
-    
+
     <div class="wish-list-wrap">
       <div class="view-wishes">
         <h3 class="wish-list">위시 리스트</h3>
-        <router-link class="more-info" :to="{name: 'Shop'}">더보기</router-link>
+        <router-link
+          class="more-info"
+          :to="{ name: 'Shop', params: { page: shopPage } }"
+          >더보기</router-link
+        >
       </div>
     </div>
     <div class="product-cards">
-      <ProductCard class="product-card" :post="post" v-for="(post, idx) in wishLists" :key="idx"/>
+      <ProductCard
+        class="product-card"
+        :post="post"
+        v-for="(post, idx) in wishLists"
+        :key="idx"
+      />
     </div>
   </div>
 </template>
@@ -64,79 +97,73 @@ import ShopListCard from '../components/ShopListCard.vue';
 import ProductCard from '../components/ProductCard';
 
 export default {
-    name: 'ShopCart',
-    components: {
-      ShopListCard,
-      ProductCard,
-    },
-    data() {
-      return {
-        currentProduct: null,
-        productPrice: 0,
-        deliPrice: 0,
-        isChecked: 0,
-        arr: [],
-      }
-    },
-    async mounted() {
-      //this.$store.dispatch("getCurrentUser");
-      this.arr.push('all');
-      this.check();
-      this.currentProduct = this.$store.state.profileShopList;
-      await this.$store.dispatch('getCurrentUser');
-    },
-    computed: {
-      getTotalPrice() {
-        return (this.productPrice + this.deliPrice).toLocaleString();
-      },
-      getProductPrice() {
-        this.computeProductPrice();
-        return this.$store.state.totalPrice.toLocaleString();
-      },
-      getDeliPrice() {
-        if(this.$store.state.deliPrice === 0) {
-          return '무료';
-        }
-        return this.$store.state.deliPrice.toLocaleString() + `원`;
-      },
+  name: 'ShopCart',
+  components: {
+    ShopListCard,
+    ProductCard,
+  },
+  data() {
+    return {
+      currentProduct: [{}],
+      productPrice: 0,
+      deliPrice: 0,
+      isChecked: 0,
+      arr: [],
 
-      shopLists() {
-        return this.$store.state.profileShopList;
-      },
-      wishLists() {
-        return this.$store.state.profileWishList;
+      shopPage: 1,
+    };
+  },
+  async created() {},
+  async mounted() {
+    await this.$store.dispatch('getPost');
+    await this.$store.dispatch('getCurrentUser');
+    this.arr.push('all');
+    this.check();
+  },
+  computed: {
+    getTotalPrice() {
+      return (this.productPrice + this.$store.state.deliPrice).toLocaleString();
+    },
+    getProductPrice() {
+      this.computeProductPrice();
+      return this.$store.state.totalPrice.toLocaleString();
+    },
+    getDeliPrice() {
+      if (this.$store.state.deliPrice === 0) {
+        return '무료';
+      }
+      return this.$store.state.deliPrice.toLocaleString() + `원`;
+    },
+
+    shopLists() {
+      return this.$store.state.profileShopList;
+    },
+    wishLists() {
+      return this.$store.state.profileWishList;
+    },
+  },
+  methods: {
+    computeProductPrice() {
+      this.$store.dispatch('updateTotalPrice');
+      this.productPrice = this.$store.state.totalPrice;
+    },
+    getWishList() {},
+    deleteProduct() {},
+    check() {
+      this.$store.state.checkLists = [];
+      if (this.arr.length) {
+        this.shopLists.forEach((post, index) => {
+          this.$store.state.checkLists.push(index);
+        });
       }
     },
-    methods: {
-      computeProductPrice() {
-        this.$store.dispatch("updateTotalPrice");
-        this.productPrice = this.$store.state.totalPrice;
-      },
-      getWishList() {
-        
-      },
-      deleteProduct() {
-        
-      },
-      check() {
-        this.$store.state.checkLists = [];
-        if(this.arr.length) {
-          this.shopLists.forEach((post, index) => {
-            this.$store.state.checkLists.push(index);
-          });
-        } 
-      },
-    },
-    watch: {
-      currentProduct() {
-        this.currentProduct = this.$store.state.profileShopList;
-      }
-    }
-}
+  },
+  watch: {},
+};
 </script>
 
 <style lang="scss" scoped>
-*{
+* {
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 400;
   //border: 1px solid black;
@@ -145,7 +172,6 @@ export default {
 .container {
   margin-bottom: 50px;
   .info {
-    
     display: flex;
     flex-direction: row;
     padding: 30px 0;
@@ -197,9 +223,8 @@ export default {
       flex: 2;
     }
     .deli-price {
-      flex:2;
+      flex: 2;
       //border: 1px solid black;
-
     }
     .price {
       flex: 2;
@@ -221,10 +246,9 @@ export default {
       flex-direction: row;
       width: 53%;
       justify-content: space-between;
-      
-      .price{
+
+      .price {
         font-size: 14px;
-        
       }
     }
     .deli-price {
@@ -233,18 +257,18 @@ export default {
       flex-direction: row;
       width: 53%;
       justify-content: space-between;
-      
+
       .price {
         font-size: 14px;
       }
-    } 
+    }
   }
 
   .overall {
     display: flex;
     flex-direction: row;
-    
-    .options{
+
+    .options {
       .option {
         background-color: #fff;
         border: 1px solid #aaa;
@@ -252,7 +276,7 @@ export default {
         border-radius: 15px;
         margin: 20px 5px;
         cursor: pointer;
-        transition: .3s ease all;
+        transition: 0.3s ease all;
         &:hover {
           border: 1px solid black;
         }
@@ -284,9 +308,7 @@ export default {
     }
   }
 
-
   .actions {
-  
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -301,15 +323,15 @@ export default {
       line-height: 24px;
       letter-spacing: 2px;
       background-color: #7ba3c5;
-      border:none;
+      border: none;
       color: #fff;
-      transition: .3s ease all;
+      transition: 0.3s ease all;
       cursor: pointer;
       text-decoration: none;
-      
+
       span {
         display: flex;
-        
+
         justify-content: center;
         margin-top: 11px;
       }
@@ -336,9 +358,9 @@ export default {
       text-decoration: underline;
       background-color: #fff;
       border: none;
-      transition: .3s ease all;
+      transition: 0.3s ease all;
       cursor: pointer;
-      
+
       &:hover {
         color: #4a82b3;
       }
@@ -347,10 +369,10 @@ export default {
 
   .wish-list-wrap {
     margin-bottom: 20px;
-    
+
     .view-wishes {
       display: flex;
-      flex-direction: row;  
+      flex-direction: row;
       align-items: center;
       .wish-list {
         font-size: 15px;
@@ -369,7 +391,7 @@ export default {
         background-color: #fff;
         border: 1px solid #aaa;
         cursor: pointer;
-        transition: .3s ease all;
+        transition: 0.3s ease all;
         font-weight: 700;
         font-size: 12px;
         &:hover {
@@ -384,16 +406,14 @@ export default {
     gap: 26px;
     row-gap: 50px;
     @media (min-width: 500px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      @media (min-width: 900px) {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      @media (min-width: 1200px) {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 900px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 1200px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 }
-
 </style>

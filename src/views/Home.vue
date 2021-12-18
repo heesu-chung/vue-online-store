@@ -1,36 +1,47 @@
 <template>
   <div class="container-wrap">
-        <router-link class="landing" :to="{name: 'Shop'}">
-          <img src="" alt="">
-        </router-link>
-        <router-link class="landing" :to="{name: 'Shop'}">
-          <img src="" alt="">
-        </router-link>
-        <router-link class="landing" :to="{name: 'Shop'}">
-          <img src="" alt="">
-        </router-link>
-        <router-link class="landing" :to="{name: 'Shop'}">
-          <img src="" alt="">
-        </router-link>
-  </div>  
+    <router-link
+      class="landing"
+      :to="{ name: 'Shop', params: { page: shopPage } }"
+    >
+      <img src="" alt="" />
+    </router-link>
+    <router-link
+      class="landing"
+      :to="{ name: 'Shop', params: { page: shopPage } }"
+    >
+      <img src="" alt="" />
+    </router-link>
+    <router-link
+      class="landing"
+      :to="{ name: 'Shop', params: { page: shopPage } }"
+    >
+      <img src="" alt="" />
+    </router-link>
+    <router-link
+      class="landing"
+      :to="{ name: 'Shop', params: { page: shopPage } }"
+    >
+      <img src="" alt="" />
+    </router-link>
+  </div>
 </template>
 
 <script>
-
 export default {
-    name: 'Home',
-    components: {
-    },
-    async created() {
-      await this.$store.dispatch('getCurrentUser'); 
-      await this.$store.dispatch('getPost');
-    }
-}
+  name: 'Home',
+  data() {
+    return {
+      shopPage: 1,
+    };
+  },
+  components: {},
+  async created() {},
+};
 </script>
 
 <style lang="scss" scoped>
-*{
-
+* {
 }
 .container-wrap {
   position: relative;
@@ -41,6 +52,5 @@ export default {
     margin-bottom: 30px;
     background-color: #aaa;
   }
-}
-</style>>
-
+}</style
+>>

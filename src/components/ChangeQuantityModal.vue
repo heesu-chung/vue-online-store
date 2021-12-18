@@ -21,14 +21,15 @@ import firebase from "firebase/compat/app";
 import db from "../firebase/firebaseInit";
 export default {
     name: 'ChangeQuantityModal',
-    props: ["modalMessage", "idx", "shopList"],
+    props: ["modalMessage", "idx", "shopList", "productQuantity"],
     data() {
         return {
-            quantity: 1,
+            quantity: null,
             productId: null,
         };
     },
     async mounted() {
+        this.quantity = this.productQuantity;
     },
     methods: {
         closeModal() {
