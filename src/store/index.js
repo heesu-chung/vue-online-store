@@ -15,6 +15,7 @@ const state = {
   deliPrice: null,
   shopLists: [],
   checkLists: [],
+  orderPosts: [],
   // Product Info
   user: null,
 
@@ -126,7 +127,23 @@ const actions = {
     const dbResults = await dataBase.get();
     commit('setProfileInfo', dbResults);
   },
-
+  async getOrders({ state }) {
+    const dataBase = await db.collection('orders').orderBy('orderDate', 'desc');
+    const dbResults = await dataBase.get();
+    dbResults.forEach(doc => {
+      if (!state.orderPosts.some(post => post.productId === doc.id)) {
+        const data = {
+          deliveryDate: doc.data().deliveryDate,
+          deliveryDone: doc.data().deliveryDone,
+          orderDate: doc.data().orderDate,
+          orderProfileInfo: doc.data().orderProfileInfo,
+          orderProductInfo: doc.data().orderProductInfo,
+        };
+        state.orderPosts.push(data);
+      }
+    });
+    state.postLoaded = true;
+  },
   async getPost({ state }) {
     const dataBase = await db
       .collection('shopPosts')
@@ -175,6 +192,20 @@ const actions = {
     await dataBase.update({
       profileShopList: updateShopList,
     });
+    commit(`setProfileInfo`, result);
+  },
+  async deleteWishList({ state, commit }, payload) {
+    const dataBase = db
+      .collection('users')
+      .doc(firebase.auth().currentUser.uid);
+    const result = await dataBase.get();
+    const updateWishList = state.profileWishList.filter(post => {
+      return post.productId !== payload;
+    });
+    await dataBase.update({
+      profileWishList: updateWishList,
+    });
+    state.profileWishList = updateWishList;
     commit(`setProfileInfo`, result);
   },
   async removeList({ state, commit }) {

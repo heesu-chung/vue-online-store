@@ -2,7 +2,9 @@
   <div class="container">
     <div class="info">
       <h2 class="shop-list">장바구니</h2>
-      <h4 class="shop-list-quantity">2</h4>
+      <h4 class="shop-list-quantity">
+        {{ this.$store.state.profileShopList.length }}
+      </h4>
     </div>
     <div class="category">
       <input

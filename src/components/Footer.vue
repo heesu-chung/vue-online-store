@@ -28,7 +28,9 @@
               <h5 class="term">개인정보처리방침</h5>
           </div>
           <div class="icons">
-              <a class="icon" href=https://www.instagram.com/dededef_lab/>instagram</a>
+              <a class="icon" href=https://www.instagram.com/dededef_lab/>
+              <icon-base iconName="Instagram" iconColor="#fff"><instagram /></icon-base>
+              </a>
               
           </div>
       </div>

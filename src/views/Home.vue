@@ -36,7 +36,10 @@ export default {
     };
   },
   components: {},
-  async created() {},
+  async created() {
+    await this.$store.dispatch('getPost');
+    await this.$store.dispatch('getCurrentUser');
+  },
 };
 </script>
 

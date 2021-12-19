@@ -7,12 +7,15 @@ import IconBase from './components/IconBase.vue';
 import IconHeart from './components/icons/IconHeart.vue';
 import IconHeartFilled from './components/icons/IconHeartFilled.vue';
 import Shopping from './components/icons/Shopping.vue';
+import Instagram from './components/icons/Instagram.vue';
 import 'firebase/auth';
+
 Vue.use(Vue2Editor);
 Vue.component('icon-base', IconBase);
 Vue.component('icon-heart', IconHeart);
 Vue.component('icon-heart-filled', IconHeartFilled);
 Vue.component('shopping', Shopping);
+Vue.component('instagram', Instagram);
 Vue.config.productionTip = false;
 
 new Vue({

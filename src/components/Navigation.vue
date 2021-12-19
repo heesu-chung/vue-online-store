@@ -12,7 +12,7 @@
             <ul v-show="!mobile">
               <router-link
                 class="link"
-                :to="{ name: 'Shop', params: { page: shopPage } }"
+                :to="{ name: 'Shop', params: { page: 1 } }"
                 >SHOP</router-link
               >
               <router-link class="link" :to="{ name: 'About' }"
@@ -33,7 +33,7 @@
             <router-link
               class="login"
               @click="clickProfileName"
-              :to="{ name: 'MyPage' }"
+              :to="{ name: 'MyPage', params: { page: 'order-Inquiry' } }"
               >{{ this.$store.state.profileName }}</router-link
             >
             <div @click="signout" class="register">Logout</div>
@@ -257,7 +257,7 @@ header {
           }
           .list-quantity {
             position: absolute;
-            top: 15px;
+            top: 30px;
             transform: translateX(5px);
             background-color: #666;
             border: 2px solid white;
@@ -267,10 +267,10 @@ header {
             display: flex;
             justify-content: center;
             align-items: center;
-            opacity: 60%;
+            opacity: 40%;
             transition: 0.3s all ease;
             h5 {
-              font-size: 12px;
+              font-size: 11px;
               color: #fff;
             }
             &:hover {
