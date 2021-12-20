@@ -192,6 +192,7 @@ export default {
       return post.productId === this.$route.params.productId;
     });
     this.wish = this.currentProduct[0].productWishes;
+    this.$store.commit('setProductInfo', this.currentProduct[0]);
   },
   async mounted() {
     this.$store.state.profileWishList.forEach(post => {
@@ -199,6 +200,7 @@ export default {
         this.isLikes = true;
       }
     });
+    this.$store.state.nowSeeing = this.$route.params.productId;
   },
   async updated() {},
   computed: {

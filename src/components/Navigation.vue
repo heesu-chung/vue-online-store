@@ -186,7 +186,7 @@ header {
         //padding-left: 30px;
         ul {
           padding: 15px 15px;
-
+          padding-left: 40px;
           .link {
             padding: 0 20px;
             font-family: 'Open Sans', sans-serif;

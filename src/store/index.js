@@ -16,6 +16,7 @@ const state = {
   shopLists: [],
   checkLists: [],
   orderPosts: [],
+  nowSeeing: null,
   // Product Info
   user: null,
 
@@ -31,6 +32,7 @@ const state = {
   uid: null,
   productUpdateDate: null,
   productHTML: null,
+  productInquiry: [],
 
   // User - auth
   profileEmail: null,
@@ -67,6 +69,15 @@ const state = {
   orderDate: null,
   deliveryDone: null,
   deliveryDate: null,
+
+  // Product Inquiry
+  inquiryTitle: null,
+  inquiryHTML: null,
+  inquiryDate: null,
+  inquiryId: null,
+  inquiryuid: null,
+  inquiryProductName: null,
+  inquiryProductId: null,
 };
 
 const mutations = {
@@ -112,6 +123,20 @@ const mutations = {
     state.profileInfo = doc.data().profileInfo;
     state.profileOrderList = doc.data().profileOrderList;
   },
+  setProductInfo(state, payload) {
+    state.productName = payload.productName;
+    state.productId = payload.productId;
+    state.productPrice = payload.productPrice;
+    state.productRemainQuantity = payload.productRemainQuantity;
+    state.productDeliveryPrice = payload.productDeliveryPrice;
+    state.productWishes = payload.productWishes;
+    state.productPhoto = payload.productPhoto;
+    state.productPhotoName = payload.productPhotoName;
+    state.productUpdateDate = payload.productUpdateDate;
+    state.productHTML = payload.productHTML;
+    state.productInquiry = payload.productInquiry;
+  },
+
   filterShopList(state, payload) {
     state.shopPosts = state.shopPosts.filter(
       post => post.productId !== payload,
@@ -162,6 +187,7 @@ const actions = {
           productPhotoName: doc.data().productPhotoName,
           productUpdateDate: doc.data().productUpdateDate,
           productHTML: doc.data().productHTML,
+          productInquiry: doc.data().productInquiry,
         };
         state.shopPosts.push(data);
       }

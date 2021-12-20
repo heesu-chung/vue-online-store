@@ -1,12 +1,15 @@
 <template>
   <div class="container-wrap">
-    <div class="infos">
+    <div class="infos" v-if="this.$store.state.orderPosts">
       <h4 class="title">주문 내역</h4>
       <div class="circle">
         <h5>{{ this.$store.state.orderPosts.length }}</h5>
       </div>
     </div>
     <OrderList :post="post" v-for="(post, idx) in orderLists" :key="idx" />
+    <div class="no-list" v-if="!this.$store.state.orderPosts.length">
+      주문 내역이 없습니다.
+    </div>
   </div>
 </template>
 
@@ -60,6 +63,17 @@ export default {
         margin-top: -2px;
       }
     }
+  }
+
+  .no-list {
+    width: 100%;
+    height: 300px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #aaa;
   }
 }
 </style>

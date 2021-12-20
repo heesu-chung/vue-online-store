@@ -19,6 +19,8 @@ import WishList from '../components/mypage/WishList.vue';
 import Qna from '../components/mypage/Qna.vue';
 import ProfileRevision from '../components/mypage/ProfileRevision.vue';
 import Unregister from '../components/mypage/Unregister.vue';
+
+import ProductInquiry from '../views/ProductInquiry.vue';
 Vue.use(VueRouter);
 
 const routes = [
@@ -113,6 +115,11 @@ const routes = [
     path: '/product-editor',
     name: 'ProductEditor',
     component: ProductEditor,
+  },
+  {
+    path: '/product-inquiry',
+    name: 'ProductInquiry',
+    component: ProductInquiry,
   },
 ];
 
