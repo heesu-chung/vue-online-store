@@ -126,8 +126,6 @@ export default {
           .collection('shopPosts')
           .doc(this.$route.params.productId);
       }
-      console.log(timestamp, dataBase, userDB, productDB);
-
       let updateInquiry;
       let index;
 

@@ -48,7 +48,11 @@ const state = {
   isManager: null,
   profileMessage: [],
   registerDate: null,
-  profileInfo: null,
+  profileInfo: {
+    profileContact: null,
+    profileAddress: null,
+    profileAddressDetail: null,
+  },
   profileInquiry: [],
 
   profileOrderList: [],
@@ -143,6 +147,22 @@ const mutations = {
     state.shopPosts = state.shopPosts.filter(
       post => post.productId !== payload,
     );
+  },
+
+  changePW(state, payload) {
+    state.profilePassword = payload;
+  },
+  changeName(state, payload) {
+    state.profileName = payload;
+  },
+  changeContact(state, payload) {
+    state.profileInfo.profileContact = payload;
+  },
+  changeAddress(state, payload) {
+    state.profileInfo.profileAddress = payload;
+  },
+  changeAddressDetail(state, payload) {
+    state.profileInfo.profileAddressDetail = payload;
   },
 };
 
