@@ -30,7 +30,6 @@
 </template>
 
 <script>
-//import firebase from 'firebase/compat/app';
 import db from '../firebase/firebaseInit';
 import Modal from '../components/Modal.vue';
 export default {

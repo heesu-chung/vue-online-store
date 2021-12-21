@@ -3,11 +3,10 @@
     <header>
       <nav class="container">
         <div class="left-element">
-          <div class="logo">
-            <router-link class="link" :to="{ name: 'Home' }"
-              >DeDeDef</router-link
-            >
-          </div>
+          <router-link class="logo" :to="{ name: 'Home' }">
+            <div class="link-top">DeDeDef</div>
+            <div class="link-bottom">COMMERCE</div>
+          </router-link>
           <div class="nav-links">
             <ul v-show="!mobile">
               <router-link
@@ -18,7 +17,7 @@
               <router-link class="link" :to="{ name: 'About' }"
                 >ABOUT</router-link
               >
-              <router-link class="link" :to="{ name: 'Contact' }"
+              <router-link class="link" :to="{ name: 'ArtWork' }"
                 >ART WORK</router-link
               >
               <router-link class="link" :to="{ name: 'Contact' }"
@@ -65,11 +64,7 @@
               </div>
             </router-link>
 
-            <router-link
-              :to="{ name: 'ShopCart' }"
-              class="shop-list"
-              v-if="!user"
-            >
+            <router-link :to="{ name: 'Login' }" class="shop-list" v-if="!user">
               <icon-base
                 icon-name="shopping"
                 iconColor="#ccc"
@@ -126,7 +121,6 @@ export default {
   },
   methods: {
     signout() {
-      console.log('sign out');
       firebase.auth().signOut();
 
       this.$store.dispatch('getPost');
@@ -172,14 +166,32 @@ header {
       .logo {
         font-size: 40px;
         font-weight: 900;
-        letter-spacing: -5px;
-        .link {
-          text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        .link-top {
           color: #000;
           transition: 0.5s ease all;
+          font-size: 30px;
+          letter-spacing: -4px;
+          transition: 0.3s all ease;
           &:hover {
-            color: #aaa;
+            color: #888;
           }
+          //font-stretch: extra-expanded;
+        }
+        .link-bottom {
+          color: #888;
+          font-size: 14px;
+          margin-top: -10px;
+          letter-spacing: 3.5px;
+          margin-left: 9px;
+        }
+        &:hover {
+          color: #aaa;
         }
       }
       .nav-links {

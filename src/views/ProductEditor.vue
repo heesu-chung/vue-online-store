@@ -92,9 +92,6 @@ export default {
     fileChange() {
       this.file = this.$refs.productPhoto.files[0];
       const fileName = this.file.name;
-      console.log('fileChange exec : ' + this.file.name);
-
-      console.log(this.$store.state.productPhotoName);
       this.$store.commit('fileNameChange', fileName);
       this.$store.commit('createFileURL', URL.createObjectURL(this.file));
     },

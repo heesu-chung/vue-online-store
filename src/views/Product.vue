@@ -4,6 +4,7 @@
       v-if="modalActive"
       :modalMessage="modalMessage"
       v-on:close-modal="closeModal"
+      :shopCart="shopCart"
     />
     <div class="container">
       <h4 class="nav">Home > SHOP > Product</h4>
@@ -139,12 +140,6 @@
       </div>
 
       <Question />
-      <div class="board-title">
-        <h5 class="post-status">상태</h5>
-        <h5 class="post-title">제목</h5>
-        <h5 class="post-writer">작성자</h5>
-        <h5 class="post-date">등록일</h5>
-      </div>
     </div>
   </div>
 </template>
@@ -182,12 +177,15 @@ export default {
 
       loading: false,
       routeId: null,
+      shopCart: true,
       // wish: null,
     };
   },
   async created() {
     await this.$store.dispatch('getPost');
-    await this.$store.dispatch('getCurrentUser');
+    if (this.$store.state.user) {
+      await this.$store.dispatch('getCurrentUser');
+    }
     this.currentProduct = this.$store.state.shopPosts.filter(post => {
       return post.productId === this.$route.params.productId;
     });
@@ -585,29 +583,6 @@ export default {
     }
     .detail {
       color: #000;
-    }
-  }
-  .board-title {
-    width: 100%;
-    margin-bottom: 80px;
-    display: flex;
-    flex-direction: row;
-    border-top: 1px solid black;
-    border-bottom: 1px solid #ccc;
-    padding: 7px 0;
-    text-align: center;
-    font-weight: 700;
-    .post-status {
-      flex: 1;
-    }
-    .post-title {
-      flex: 7;
-    }
-    .post-writer {
-      flex: 2;
-    }
-    .post-date {
-      flex: 2;
     }
   }
 }

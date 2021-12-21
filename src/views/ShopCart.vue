@@ -118,7 +118,9 @@ export default {
   async created() {},
   async mounted() {
     await this.$store.dispatch('getPost');
-    await this.$store.dispatch('getCurrentUser');
+    if (this.$store.state.user) {
+      await this.$store.dispatch('getCurrentUser');
+    }
     this.arr.push('all');
     this.check();
   },

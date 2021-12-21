@@ -13,7 +13,7 @@ import Register from '../views/Register.vue';
 import SiteJoinAgreement from '../views/SiteJoinAgreement.vue';
 import OrderDone from '../views/OrderDone.vue';
 import ProductEditor from '../views/ProductEditor.vue';
-
+import ArtWork from '../views/ArtWork.vue';
 import OrderInquiry from '../components/mypage/OrderInquiry.vue';
 import WishList from '../components/mypage/WishList.vue';
 import Qna from '../components/mypage/Qna.vue';
@@ -21,9 +21,15 @@ import ProfileRevision from '../components/mypage/ProfileRevision.vue';
 import Unregister from '../components/mypage/Unregister.vue';
 
 import ProductInquiry from '../views/ProductInquiry.vue';
+import ProductOneOnOneInquiry from '../views/ProductOneOnOneInquiry.vue';
+import NotFound from '../views/404.vue';
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: '*',
+    component: NotFound,
+  },
   {
     path: '/',
     name: 'Home',
@@ -120,6 +126,16 @@ const routes = [
     path: '/product-inquiry',
     name: 'ProductInquiry',
     component: ProductInquiry,
+  },
+  {
+    path: '/product-inquiry',
+    name: 'ProductOneOnOneInquiry',
+    component: ProductOneOnOneInquiry,
+  },
+  {
+    path: '/art-work',
+    name: 'ArtWork',
+    component: ArtWork,
   },
 ];
 

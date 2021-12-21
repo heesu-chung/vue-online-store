@@ -49,6 +49,7 @@ const state = {
   profileMessage: [],
   registerDate: null,
   profileInfo: null,
+  profileInquiry: [],
 
   profileOrderList: [],
 
@@ -122,6 +123,7 @@ const mutations = {
     state.registerDate = doc.data().registerDate;
     state.profileInfo = doc.data().profileInfo;
     state.profileOrderList = doc.data().profileOrderList;
+    state.profileInquiry = doc.data().profileInquiry;
   },
   setProductInfo(state, payload) {
     state.productName = payload.productName;

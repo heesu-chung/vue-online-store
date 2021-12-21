@@ -2,7 +2,7 @@
   <div class="container">
     <div class="question-num">
       <h3>Q&A</h3>
-      <div>0</div>
+      <div>{{ this.productInquiries.length }}</div>
     </div>
     <div class="btns">
       <router-link class="btn-router" :to="{ name: 'ProductInquiry' }"
@@ -11,17 +11,53 @@
       <router-link
         class="btn-router"
         :to="{ name: 'Qna' }"
-        :productName="this.$route.params.productName"
+        :productNameInquiry="this.$route.params.productName"
         >1 : 1 문의</router-link
       >
     </div>
-    <div class="content"></div>
+    <div class="board-title">
+      <h5 class="post-status">상태</h5>
+      <h5 class="post-title">제목</h5>
+      <h5 class="post-writer">작성자</h5>
+      <h5 class="post-date">등록일</h5>
+    </div>
+    <div class="content">
+      <QuestionPost
+        :post="post"
+        v-for="(post, idx) in productInquiries"
+        :key="idx"
+        :idx="idx"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import QuestionPost from './QuestionPost.vue';
 export default {
   name: 'Question',
+  components: {
+    QuestionPost,
+  },
+  async mounted() {},
+  computed: {
+    productInquiries() {
+      return this.isThisProduct();
+    },
+  },
+  methods: {
+    isThisProduct() {
+      let newProductInquiryList = [];
+      if (this.$store.state.productInquiry) {
+        newProductInquiryList = this.$store.state.productInquiry.filter(
+          post => {
+            return post.inquiryProductId === this.$route.params.productId;
+          },
+        );
+      }
+      return newProductInquiryList;
+    },
+  },
 };
 </script>
 
@@ -32,12 +68,14 @@ export default {
   .question-num {
     display: flex;
     flex-direction: row;
+    align-items: center;
     div {
       width: 20px;
       height: 20px;
       border-radius: 50%;
+      margin-left: 10px;
       background-color: #7ba3c5;
-      font-size: 14px;
+      font-size: 12px;
       color: #fff;
       text-align: center;
       justify-content: center;
@@ -84,7 +122,31 @@ export default {
       }
     }
   }
+  .board-title {
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid black;
+    border-bottom: 1px solid #ccc;
+    padding: 7px 0;
+    text-align: center;
+    font-weight: 700;
+    .post-status {
+      flex: 1;
+    }
+    .post-title {
+      flex: 7;
+    }
+    .post-writer {
+      flex: 2;
+    }
+    .post-date {
+      flex: 2;
+    }
+  }
   padding: 30px 0;
-  border-bottom: 1px solid #aaa;
+  //border-bottom: 1px solid #aaa;
+  margin-bottom: 80px;
 }
 </style>

@@ -20,12 +20,13 @@
               <ul class="links">
                 <router-link class="link" :to="{name: 'Shop', params: { page: shopPage }}">SHOP</router-link>
                 <router-link class="link" :to="{name: 'About'}">ABOUT</router-link>
+                <router-link class="link" :to="{name: 'ArtWork'}">ART WORK</router-link>
                 <router-link class="link" :to="{name: 'Contact'}">CONTACT</router-link>
               </ul>
           </div>
           <div class="terms">
-              <h5 class="term">이용약관</h5>
-              <h5 class="term">개인정보처리방침</h5>
+              <router-link class="term" :to="{name: 'SiteJoinAgreement'}">이용약관</router-link>
+              <router-link class="term" :to="{name: 'SiteJoinAgreement'}" >개인정보처리방침</router-link>
           </div>
           <div class="icons">
               <a class="icon" href=https://www.instagram.com/dededef_lab/>
@@ -41,10 +42,17 @@
 <script>
 export default {
     name: 'Footer',
+    components: {
+    },
     data() {
         return {
             shopPage: 1,
+            modalMessage: '',
+            modalActive: false,
         }
+    },
+    methods: {
+        
     }
 }
 </script>
@@ -54,7 +62,7 @@ export default {
     font-family: Helvetica;
 }
 footer{
-    z-index: 1001;
+    z-index: 99;
     position: relative;
     width: 100%;
     height: 250px;
@@ -106,8 +114,12 @@ footer{
         }
         .terms{
             flex: 1;
-            h5{
+            display: flex;
+            flex-direction: column;
+            .term{
                 margin-bottom: 10px;
+                text-decoration: none;
+                color: #fff;
                 cursor: pointer;
             }
         }

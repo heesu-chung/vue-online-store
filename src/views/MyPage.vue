@@ -72,7 +72,9 @@ export default {
   async mounted() {
     this.page = this.$route.params.page;
     await this.$store.dispatch('getPost');
-    await this.$store.dispatch('getCurrentUser');
+    if (this.$store.state.user) {
+      await this.$store.dispatch('getCurrentUser');
+    }
     this.$store.state.orderPosts = [];
     this.$store.state.profileOrderList.forEach(posts => {
       posts.orderProductInfo.orderLists.forEach(post => {

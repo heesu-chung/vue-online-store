@@ -1,17 +1,9 @@
 <template>
   <div class="container-all">
-    <div class="product-infos" v-if="this.inquiryProductName">
-      <h5 class="product-name">{{ this.inquiryProductName }} 상품 문의</h5>
-      <img
-        :src="this.inquiryProduct[0].productPhoto"
-        alt=""
-        v-if="this.inquiryProduct[0]"
-      />
+    <div class="product-infos">
+      <h5 class="product-name">1:1 문의</h5>
     </div>
-    <div class="product-infos" v-else>
-      <h5 class="product-name">상품 정보를 받아오지 못합니다.</h5>
-    </div>
-    <div class="product-info" v-if="inquiryProduct">
+    <div class="product-info">
       <input
         type="text"
         class="title"
@@ -53,17 +45,14 @@ const ImageResize = require('quill-image-resize-module').default;
 Quill.register('modules/imageResize', ImageResize);
 
 export default {
-  name: 'ProductInquiry',
+  name: 'ProductOneOnOneInquiry',
   props: ['productNameInquiry'],
   data() {
     return {
-      inquiryProduct: [],
       inquiryTitle: null,
       inquiryHTML: null,
       inquiryDate: null,
       inquiryId: null,
-      inquiryProductName: null,
-      inquiryProductId: null,
       inquiryName: null,
       error: null,
       errorMsg: null,
@@ -76,12 +65,7 @@ export default {
     };
   },
   async mounted() {
-    this.inquiryProduct = this.$store.state.shopPosts.filter(post => {
-      return post.productId === this.$store.state.nowSeeing;
-    });
-    this.inquiryProductName = this.inquiryProduct[0].productName;
     this.inquiryId = this.$store.state.profileId;
-    this.inquiryProductId = this.inquiryProduct[0].productId;
     this.inquiryName = this.$store.state.profileName;
   },
   components: {},
@@ -107,58 +91,49 @@ export default {
       );
     },
     async uploadPost() {
-      if (
-        this.inquiryTitle.length !== 0 &&
-        this.$store.state.nowSeeing === this.inquiryProductId
-      ) {
+      if (this.inquiryTitle.length !== 0) {
         const timestamp = await Date.now();
         const dataBase = await db.collection('inquiry').doc();
 
-        const productDB = await db
-          .collection('shopPosts')
-          .doc(this.$store.state.nowSeeing);
+        const userDB = await db
+          .collection('users')
+          .doc(firebase.auth().currentUser.uid);
 
-        if (!this.$store.state.nowSeeing) {
-          console.log(`cannot find routeId`);
-          return;
-        }
-
-        const productDataSet = {
+        const InquiryDataSet = {
           inquiryTitle: this.inquiryTitle,
           inquiryProfileId: this.inquiryId,
-          inquiryProductName: this.inquiryProductName,
-          inquiryProductId: this.inquiryProductId,
           inquiryDate: timestamp,
           inquiryHTML: this.inquiryHTML,
-          inquiryType: 'product',
+          inquiryType: 'profile',
           getResponse: false,
           inquiryName: this.inquiryName,
           inquiryMessage: [],
           inquiryId: dataBase.id,
         };
+
         let newInquiry = [];
         newInquiry = this.$store.state.productInquiry;
-        newInquiry.push(productDataSet);
-        await productDB.update({
-          productInquiry: newInquiry,
+        newInquiry.push(InquiryDataSet);
+
+        await userDB.update({
+          profileInquiry: newInquiry,
         });
 
         await dataBase.set({
           inquiryTitle: this.inquiryTitle,
           inquiryProfileId: this.inquiryId,
-          inquiryProductName: this.inquiryProductName,
-          inquiryProductId: this.inquiryProductId,
           inquiryDate: timestamp,
           inquiryHTML: this.inquiryHTML,
-          inquiryType: 'product',
+          inquiryType: 'profile',
           getResponse: false,
           inquiryName: this.inquiryName,
           inquiryMessage: [],
           inquiryId: dataBase.id,
         });
-
-        await this.$store.dispatch('getPost');
-        this.$router.push({ name: 'Shop', params: { page: 1 } });
+        if (this.$store.state.user) {
+          await this.$store.dispatch('getCurrentUser');
+        }
+        this.$router.push({ name: 'Qna' });
         return;
       }
       alert('오류 발생');
