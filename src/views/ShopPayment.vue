@@ -131,13 +131,19 @@
                 <h4 class="delivery-price-title">배송비</h4>
               </div>
               <div class="prices">
-                <h4 class="product-price">{{ getProductPrice }}원</h4>
-                <h4 class="delivery-price">{{ getDeliPrice }}</h4>
+                <h4 class="product-price">
+                  {{ getProductPrice.toLocaleString() || 0 }}원
+                </h4>
+                <h4 class="delivery-price">
+                  {{ getDeliPrice || 0 }}
+                </h4>
               </div>
             </div>
             <div class="total">
-              <h4 class="total-price-title">총 결제금액(1개)</h4>
-              <h4 class="total-price">{{ getTotalPrice }}원</h4>
+              <h4 class="total-price-title">총 결제금액</h4>
+              <h4 class="total-price">
+                {{ getTotalPrice.toLocaleString() || 0 }}원
+              </h4>
             </div>
           </div>
 
@@ -259,15 +265,22 @@ export default {
       await this.$store.dispatch('getCurrentUser');
     }
   },
+
   computed: {
     shopLists() {
-      const checkListsArr = this.$store.state.checkLists;
-      const buyShopList = this.$store.state.profileShopList.filter(
-        (post, index) => {
-          return checkListsArr.indexOf(index) !== -1;
-        },
-      );
-      return buyShopList;
+      if (this.$route.params.from === 'product') {
+        this.isListNull();
+        return this.$store.state.buyLists;
+      } else {
+        this.ischeckListsNull();
+        const checkListsArr = this.$store.state.checkLists;
+        const buyShopList = this.$store.state.profileShopList.filter(
+          (post, index) => {
+            return checkListsArr.indexOf(index) !== -1;
+          },
+        );
+        return buyShopList;
+      }
     },
     getProfileName() {
       return this.$store.state.profileName;
@@ -279,22 +292,38 @@ export default {
       return this.$store.state.profileInfo.profileContact;
     },
     getTotalPrice() {
-      return (this.productPrice + this.$store.state.deliPrice).toLocaleString();
+      return this.productPrice + this.$store.state.deliPrice;
     },
     getProductPrice() {
       this.computeProductPrice();
-      return this.$store.state.totalPrice.toLocaleString();
+      return this.$store.state.totalPrice;
     },
     getDeliPrice() {
       if (this.$store.state.deliPrice === 0) {
         return '무료';
       }
-      return this.$store.state.deliPrice.toLocaleString() + `원`;
+      return this.$store.state.deliPrice + `원`;
     },
   },
   methods: {
+    isListNull() {
+      if (!this.$store.state.buyLists) {
+        alert(`다시 시도해주세요.`);
+        this.$router.go(-1);
+      }
+    },
+    ischeckListsNull() {
+      if (!this.$store.state.checkLists.length) {
+        alert(`다시 시도해주세요.`);
+        this.$router.go(-1);
+      }
+    },
     computeProductPrice() {
-      this.$store.dispatch('updateTotalPrice');
+      if (this.$route.params.from === 'shopCart') {
+        this.$store.dispatch('updateTotalPrice');
+      } else {
+        this.$store.state.totalPrice = this.$store.state.buyLists[0].productPrice;
+      }
       this.productPrice = this.$store.state.totalPrice;
     },
     duplicateClick() {

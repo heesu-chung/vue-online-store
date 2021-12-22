@@ -13,6 +13,7 @@
         v-for="(post, index) in wishLists"
         :key="index"
         :mypage="mypage"
+        :idx="index"
       />
     </div>
   </div>

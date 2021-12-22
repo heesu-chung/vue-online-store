@@ -49,25 +49,35 @@
                   <h4 class="quantity-num">{{ quantity }}</h4>
                   <button class="plus" @click="plus">+</button>
                 </div>
-                <h5 class="price">{{ totalProductPrice }}원</h5>
+                <h5 class="price">
+                  {{ totalProductPrice.toLocaleString() }}원
+                </h5>
               </div>
             </div>
           </div>
           <div class="total">
             <h4 class="total-price-desc">총 상품금액({{ this.quantity }}개)</h4>
-            <h3 class="total-price">{{ totalPrice }}원</h3>
+            <h3 class="total-price">{{ totalPrice.toLocaleString() }}원</h3>
           </div>
           <div class="btns">
-            <router-link
+            <div
               class="buy-btn"
-              :to="{ name: 'ShopPayment' }"
-              v-if="currentProduct[0]"
-              >구매하기</router-link
+              v-if="this.$store.state.productRemainQuantity"
+              @click="goToPayment"
             >
-            <div class="btn" @click="shoplist" v-if="currentProduct[0]">
+              구매하기
+            </div>
+            <div
+              class="btn"
+              @click="shoplist"
+              v-if="this.$store.state.productRemainQuantity"
+            >
               장바구니
             </div>
-            <div class="soldout-message" v-if="!currentProduct[0]">
+            <div
+              class="soldout-message"
+              v-if="!this.$store.state.productRemainQuantity"
+            >
               품절된 상품입니다.
             </div>
             <button class="btn" v-if="isLikes" @click="likes">
@@ -174,7 +184,7 @@ export default {
       totalPriceValue: 0,
       isLikes: false,
       clicked: true,
-
+      remainQuantity: false,
       loading: false,
       routeId: null,
       shopCart: true,
@@ -206,10 +216,10 @@ export default {
       return this.getProductPrice().toLocaleString();
     },
     totalProductPrice() {
-      return this.getTotalProductPrice().toLocaleString();
+      return this.getTotalProductPrice();
     },
     totalPrice() {
-      return this.getTotalPrice().toLocaleString();
+      return this.getTotalPrice();
     },
     totalProductPriceWithoutToLocaleString() {
       return this.currentProduct[0].productPrice * this.quantity;
@@ -333,7 +343,30 @@ export default {
       this.modalActive = true;
       return;
     },
+    goToPayment() {
+      this.$store.state.buyLists = [];
+      //const finalPrice = this.getTotalPrice();
+      if (this.isFree) {
+        this.$store.state.deliPrice = 0;
+      } else {
+        this.$store.state.deliPrice = 3000;
+      }
 
+      // console.log(this.currentProduct[0]);
+      // console.log(this.$store.state.deliPay);
+      // console.log(this.totalPrice);
+      this.$store.state.buyLists.push({
+        productPhoto: this.$store.state.productPhoto,
+        productId: this.$store.state.productId,
+        productName: this.$store.state.productName,
+        productPrice: this.currentProduct[0].productPrice * this.quantity,
+        deliPay: this.$store.state.deliPrice,
+        productQuantity: this.quantity,
+        totalProductPrice: this.totalPrice,
+      });
+
+      this.$router.push({ name: 'ShopPayment', params: { from: 'product' } });
+    },
     closeModal() {
       this.modalActive = !this.modalActive;
     },
@@ -491,6 +524,7 @@ export default {
           align-items: center;
           justify-content: center;
           transition: 0.3s ease all;
+          cursor: pointer;
           &:hover {
             background-color: #4a82b3;
           }

@@ -61,7 +61,7 @@ const routes = [
     component: ShopCart,
   },
   {
-    path: '/shop-payment',
+    path: '/shop-payment/:from',
     name: 'ShopPayment',
     component: ShopPayment,
   },

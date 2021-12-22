@@ -2,11 +2,12 @@
   <div class="container-wrap">
     <div class="list-card">
       <div class="product">
-        <img :src="this.shopList.productPhoto" alt="" />
+        <img :src="this.shopList.productPhoto" v-if="this.shopList" alt="" />
+
         <div class="info">
           <div class="product-name">{{ this.shopList.productName }}</div>
           <h5 class="quantity">{{ this.shopList.productQuantity }}개</h5>
-          <h5 class="price">{{ totalPrice }}원</h5>
+          <h5 class="price">{{ totalPrice.toLocaleString() }}원</h5>
         </div>
       </div>
     </div>
@@ -30,8 +31,12 @@ export default {
   },
   async mounted() {},
   computed: {
-    totalPrice() {
-      return this.shopList.totalProductPrice.toLocaleString();
+    totalPrice: {
+      get() {
+        if (this.$route.params.from === 'shopCart')
+          return this.shopList.totalProductPrice;
+        else return this.$store.state.buyLists[0].productPrice;
+      },
     },
   },
   methods: {

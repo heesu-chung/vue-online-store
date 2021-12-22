@@ -5,23 +5,25 @@
       :modalMessage="modalMessage"
       v-on:close-modal="closeModal"
     />
+    <div class="delete-card" v-if="mypage">
+      <div class="circle" @click="deleteCard">
+        <button>X</button>
+      </div>
+    </div>
     <router-link
       class="product"
       :to="{ name: 'Product', params: { productId: this.post.productId } }"
       :post="post"
     >
       <img class="product-img" :src="post.productPhoto" alt="" />
-      <div class="delete-card" v-if="mypage">
-        <div class="circle" @click="deleteCard">
-          <button>X</button>
-        </div>
-      </div>
+
       <router-link
         :to="{ name: 'Product', params: { productId: this.post.productId } }"
         class="product-name"
         >{{ post.productName }}</router-link
       >
     </router-link>
+
     <h5 class="product-price">{{ this.price }}원</h5>
     <div class="soldout" v-show="!this.productNum">
       <h5>SOLDOUT</h5>
@@ -30,7 +32,7 @@
 </template>
 
 <script>
-import db from '../firebase/firebaseInit';
+//import db from '../firebase/firebaseInit';
 import Modal from '../components/Modal.vue';
 export default {
   name: 'ProductCard',
@@ -49,14 +51,13 @@ export default {
     };
   },
   async mounted() {
+    console.log(this.idx);
     this.getProductNum();
     this.calculatePrice();
-    //console.log(this.mypage);
     this.currentProduct = this.$store.state.shopPosts.filter(post => {
       return post.productId === this.post.productId;
     });
-
-    this.wish = this.currentProduct[0].productWishes;
+    if (this.currentProduct) this.wish = this.currentProduct[0].productWishes;
   },
   computed: {},
   methods: {
@@ -71,28 +72,16 @@ export default {
       this.price = this.post.productPrice.toLocaleString();
     },
     async deleteCard() {
-      //ShopListCard.vue - methods - deleteList
-      if (this.currentProduct && this.currentProduct[0].productWishes) {
+      if (this.currentProduct[0].productWishes) {
         const newWishList = this.$store.state.profileWishList.filter(post => {
           return post.productId !== this.post.productId;
         });
 
         this.currentProduct = newWishList;
         await this.$store.dispatch('deleteWishList', this.post.productId);
-
-        this.wish--;
-        const productDB = await db
-          .collection('shopPosts')
-          .doc(this.post.productId);
-
-        await productDB.update({
-          productWishes: this.wish,
-        });
-        this.currentProduct[0].productWishes = this.wish;
-
-        this.$store.dispatch('getCurrentUser');
         this.$store.dispatch('getPost');
-        this.$router.push({ name: 'WishList' });
+        this.$store.dispatch('getCurrentUser');
+        this.$router.go(0);
       } else {
         this.modalActive = !this.modalActive;
       }
@@ -121,44 +110,6 @@ export default {
       object-fit: cover;
       background-color: #aaa;
       cursor: pointer;
-    }
-    .delete-card {
-      position: absolute;
-
-      cursor: pointer;
-      background-color: #000;
-      width: 280px;
-      height: 280px;
-      opacity: 0%;
-      transition: 0.3s all ease;
-
-      .circle {
-        border: 1px solid #fff;
-        background-color: #000;
-        width: 30px;
-        height: 30px;
-        margin-left: 240px;
-        margin-top: 10px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        opacity: 30%;
-        button {
-          border: none;
-          background-color: #000;
-          color: #fff;
-          font-size: 14px;
-          cursor: pointer;
-        }
-        transition: 0.3s all ease;
-        &:hover {
-          opacity: 100%;
-        }
-      }
-      &:hover {
-        opacity: 60%;
-      }
     }
     .product-name {
       text-decoration: none;
@@ -190,6 +141,45 @@ export default {
       font-family: Helvetica;
       font-size: 11px;
       margin: 0 auto;
+    }
+  }
+
+  .delete-card {
+    position: absolute;
+
+    cursor: pointer;
+    background-color: #000;
+    width: 280px;
+    height: 280px;
+    opacity: 0%;
+    transition: 0.3s all ease;
+
+    .circle {
+      border: 1px solid #fff;
+      background-color: #000;
+      width: 30px;
+      height: 30px;
+      margin-left: 240px;
+      margin-top: 10px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 30%;
+      button {
+        border: none;
+        background-color: #000;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      transition: 0.3s all ease;
+      &:hover {
+        opacity: 100%;
+      }
+    }
+    &:hover {
+      opacity: 60%;
     }
   }
 }

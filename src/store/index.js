@@ -17,6 +17,8 @@ const state = {
   checkLists: [],
   orderPosts: [],
   nowSeeing: null,
+  buyLists: [],
+  pages: [],
   // Product Info
   user: null,
 
@@ -254,6 +256,17 @@ const actions = {
       profileWishList: updateWishList,
     });
     state.profileWishList = updateWishList;
+
+    const productDB = await db.collection('shopPosts').doc(payload);
+    const thisPost = state.shopPosts.filter(post => {
+      return post.productId === payload;
+    });
+    const newWishes = thisPost[0].productWishes - 1;
+    console.log(newWishes);
+    await productDB.update({
+      productWishes: newWishes,
+    });
+
     commit(`setProfileInfo`, result);
   },
   async removeList({ state, commit }) {

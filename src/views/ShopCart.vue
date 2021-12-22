@@ -61,7 +61,7 @@
     <div class="actions">
       <router-link
         class="final-order"
-        :to="{ name: 'ShopPayment' }"
+        :to="{ name: 'ShopPayment', params: { from: 'shopCart' } }"
         v-if="this.$store.state.checkLists.length !== 0"
         ><span>주문하기</span></router-link
       >

@@ -12,7 +12,7 @@
       </div>
       <div class="pw-info">
         <h3 class="title">비밀번호</h3>
-        <input type="text" class="pw" v-model="pw" v-if="pw" />
+        <input type="text" class="pw" v-model="pw" />
       </div>
       <div class="pw-info">
         <h3 class="title">비밀번호 확인</h3>
@@ -22,26 +22,21 @@
     <div class="name-revision">
       <div class="name-info">
         <h3 class="title">이름</h3>
-        <input type="text" class="name" v-model="name" v-if="name" />
+        <input type="text" class="name" v-model="name" />
       </div>
     </div>
     <div class="contact-revision">
       <div class="contact-info">
         <h3 class="title">연락처</h3>
 
-        <input type="text" class="contact" v-model="contact" v-if="contact" />
+        <input type="text" class="contact" v-model="contact" />
       </div>
     </div>
     <div class="address-revision">
       <h3 class="title">주소</h3>
-      <input type="text" class="address" v-model="address" v-if="address" />
+      <input type="text" class="address" v-model="address" />
       <h3 class="title">주소 상세</h3>
-      <input
-        type="text"
-        class="address"
-        v-model="addressDetail"
-        v-if="addressDetail"
-      />
+      <input type="text" class="address" v-model="addressDetail" />
     </div>
 
     <div class="btns">
@@ -63,6 +58,7 @@ export default {
     };
   },
   async mounted() {
+    this.$store.dispatch('getCurrentUser');
     this.profileInfo = this.$store.state.profileInfo;
   },
   computed: {

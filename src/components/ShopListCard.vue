@@ -125,7 +125,7 @@ export default {
     orderOne() {
       this.$store.state.checkLists = [];
       this.$store.state.checkLists.push(this.idx);
-      this.$router.push({ name: 'ShopPayment' });
+      this.$router.push({ name: 'ShopPayment', params: { from: 'shopCart' } });
     },
     changeQuantity() {
       this.modalActive = !this.modalActive;
